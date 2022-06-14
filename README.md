@@ -64,8 +64,8 @@ Users are able to find ingredients for certain recipes in nearby stores and opti
    * ...
 
 ## Wireframes
-[Add picture of your hand sketched wireframes in this section]
-<img src="YOUR_WIREFRAME_IMAGE_URL" width=600>
+![wireframe](https://user-images.githubusercontent.com/36943811/173662715-0f5ea563-9fd9-4a90-9009-483de79d936b.jpeg)
+
 
 ### [BONUS] Digital Wireframes & Mockups
 
