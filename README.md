@@ -50,32 +50,18 @@ Users are able to find ingredients for certain recipes in nearby stores and opti
 
 **Tab Navigation** (Tab to Screen)
 
-* [fill out your first tab]
-* [fill out your second tab]
-* [fill out your third tab]
+* Saved (scroll, leftmost) - go to area where user can see saved recipes and history (cooked recipes)
+* Recipes (chicken leg, right of leftmost) - go to searchbar where user can search for recipes
+* Feed (person, left of rightmost) - go to screen where user can see recipes that their friends have made and posted
+* Chat (speech bubble, rightmost) - go to screen where users can chat with friends about recipes and food
 
 **Flow Navigation** (Screen to Screen)
 
-* [list first screen here]
-   * [list screen navigation here]
-   * ...
-* [list second screen here]
-   * [list screen navigation here]
-   * ...
+* Login screen
+   * Sign up screen
+   * Feed
+* Saved, Recipes, Feed, Chat (all of these can go to each other via the toolbar)
 
 ## Wireframes
 ![wireframe](https://user-images.githubusercontent.com/36943811/173662715-0f5ea563-9fd9-4a90-9009-483de79d936b.jpeg)
 
-
-### [BONUS] Digital Wireframes & Mockups
-
-### [BONUS] Interactive Prototype
-
-## Schema 
-[This section will be completed in Unit 9]
-### Models
-[Add table of models]
-### Networking
-- [Add list of network requests by screen ]
-- [Create basic snippets for each Parse network request]
-- [OPTIONAL: List endpoints if using existing API such as Yelp]
