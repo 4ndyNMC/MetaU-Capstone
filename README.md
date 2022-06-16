@@ -65,3 +65,36 @@ Users are able to find ingredients for certain recipes in nearby stores and opti
 ## Wireframes
 ![wireframe](https://user-images.githubusercontent.com/36943811/173662715-0f5ea563-9fd9-4a90-9009-483de79d936b.jpeg)
 
+## Schema 
+
+### Models
+Model: User
+| Property    | Type        | Description
+| ----------- | ----------- | -----------
+| username    | String      | username to log in and display
+| password    | String      | password to log in
+| saved       | List\<Recipe> | list of recipes that user saved
+| history     | List\<Recipe> | list of recipes that user has cooked
+
+Model: Post
+| Property    | Type        | Description
+|-------------|-------------|------------
+| user        | User        | user who created post
+| recipes     | List\<Recipe> | recipes user cooked in post
+| description | String      | commentary about post by user
+
+Model: Recipe
+| Property    | Type        | Description
+|-------------|-------------|------------
+| name        | String      | name of recipe
+| description | String      | description of recipe
+| cuisine     | Cuisine     | cuisine of recipe
+| diet        | List\<Diet> | diets that this recipe can support
+| intolerances| List\<Intolerance> | ingredients that many people cannot eat
+| meal type   | MealType    | type of meal
+
+Enum: Cuisine, [values](https://spoonacular.com/food-api/docs#Cuisines)
+Enum: Diet, [values](https://spoonacular.com/food-api/docs#Diets)
+Enum: Intolerance, [values](https://spoonacular.com/food-api/docs#Intolerances)
+Enum: Meal Type, [values](https://spoonacular.com/food-api/docs#Meal-Types)
+
