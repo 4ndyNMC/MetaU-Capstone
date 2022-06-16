@@ -93,8 +93,8 @@ Model: Recipe
 | intolerances| List\<Intolerance> | ingredients that many people cannot eat
 | meal type   | MealType    | type of meal
 
-Enum: Cuisine, [values](https://spoonacular.com/food-api/docs#Cuisines)
-Enum: Diet, [values](https://spoonacular.com/food-api/docs#Diets)
-Enum: Intolerance, [values](https://spoonacular.com/food-api/docs#Intolerances)
-Enum: Meal Type, [values](https://spoonacular.com/food-api/docs#Meal-Types)
+Enum: Cuisine - [values](https://spoonacular.com/food-api/docs#Cuisines)
+ | Enum: Diet - [values](https://spoonacular.com/food-api/docs#Diets)
+ | Enum: Intolerance - [values](https://spoonacular.com/food-api/docs#Intolerances)
+ | Enum: Meal Type - [values](https://spoonacular.com/food-api/docs#Meal-Types)
 
