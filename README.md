@@ -64,8 +64,7 @@ Users are able to find ingredients for certain recipes in nearby stores and opti
 * Saved, Recipes, Feed, Chat (all of these can go to each other via the toolbar)
 
 ## Wireframes
-![image](https://user-images.githubusercontent.com/36943811/174688170-9c0335eb-ed6c-4aad-aa8d-1869df5a77f9.png)
-
+![image](https://user-images.githubusercontent.com/36943811/174688577-9698fcc8-1c32-4f0c-82ad-70e427e94ed0.png)
 
 ## Schema 
 
