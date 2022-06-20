@@ -30,13 +30,14 @@ Users are able to find ingredients for certain recipes in nearby stores and opti
 
 **Required Must-have Stories**
 
-* User logs on and searches "spaghetti", and can choose between a number of different recipes. Once one is selected, the user sees a map of stores around them and how much it would cost to buy the ingredients to that recipe at that store.
+* User can log in & sign up
+* User can search for recipes with variable criteria
+* User can search for other users with variable criteria & follow them to see their saved recipes
 * User can save recipes
 
 **Optional Nice-to-have Stories**
 
-* User posts recipe they made and can see recipes their friends made, pictures and other details
-
+* User can view recipe history
 ### 2. Screen Archetypes
 
 * [list first screen here]
@@ -63,7 +64,8 @@ Users are able to find ingredients for certain recipes in nearby stores and opti
 * Saved, Recipes, Feed, Chat (all of these can go to each other via the toolbar)
 
 ## Wireframes
-![wireframe](https://user-images.githubusercontent.com/36943811/173662715-0f5ea563-9fd9-4a90-9009-483de79d936b.jpeg)
+![image](https://user-images.githubusercontent.com/36943811/174688170-9c0335eb-ed6c-4aad-aa8d-1869df5a77f9.png)
+
 
 ## Schema 
 
