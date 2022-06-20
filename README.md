@@ -99,3 +99,11 @@ Enum: Cuisine - [values](https://spoonacular.com/food-api/docs#Cuisines)
  | Enum: Intolerance - [values](https://spoonacular.com/food-api/docs#Intolerances)
  | Enum: Meal Type - [values](https://spoonacular.com/food-api/docs#Meal-Types)
 
+### Networking
+* **Log in** will query to database and find the inputted username & password
+* **Sign up** will query to the database to find the inputted username or insert a new user with the inputted username & password
+* **Search recipe** will query to the Spoonacular API with the criteria selected by the user
+* **User saved** will query to the database for the saved recipes of a given user, current user or following
+* **Recipe info** should have recipe objects passed into it from previous queries so it shouldn't need to query for more data
+* **Following** will query the database for all users that the current user is following
+* **Search users** will query the database for users with a high enough proportion of the given cuisine type saved and return them to be displayed in following
