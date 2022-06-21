@@ -70,14 +70,6 @@ Model: User
 | username    | String      | username to log in and display
 | password    | String      | password to log in
 | saved       | List\<Recipe> | list of recipes that user saved
-| history     | List\<Recipe> | list of recipes that user has cooked
-
-Model: Post
-| Property    | Type        | Description
-|-------------|-------------|------------
-| user        | User        | user who created post
-| recipes     | List\<Recipe> | recipes user cooked in post
-| description | String      | commentary about post by user
 
 Model: Recipe
 | Property    | Type        | Description
