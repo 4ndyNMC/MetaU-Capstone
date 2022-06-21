@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MetaU Capstone</string>
+    <string name="login">log in</string>
+    <string name="signup">sign up</string>
+    <string name="username">email</string>
+    <string name="password">password</string>
 </resources>
