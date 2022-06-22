@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_saved"
+        android:icon="@drawable/ic_baseline_sticky_note_2_24"
+        android:title="@string/action_saved"
+        app:showAsAction="always"
+        />
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_baseline_fastfood_24"
+        android:title="@string/action_search"
+        app:showAsAction="always"
+        />
+    <item
+        android:id="@+id/action_friends"
+        android:icon="@drawable/ic_baseline_person_24"
+        android:title="@string/action_friends"
+        app:showAsAction="always"
+        />
+
+</menu>
