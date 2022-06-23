@@ -36,7 +36,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        return 0;
+        return recipes.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -55,6 +55,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
         public void bind(Recipe recipe) {
             tvRecipeName.setText(recipe.getName());
+            tvRecipeName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Spoonacular.GetRecipeInfo(recipe);
+                }
+            });
         }
     }
 

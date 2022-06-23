@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
 
@@ -23,6 +24,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class SearchFragment extends Fragment {
@@ -32,12 +34,11 @@ public class SearchFragment extends Fragment {
     private FragmentManager fragmentManager;
     private InputMethodManager imm;
     private ConstraintLayout clSearch;
+    private EditText etSearch;
     private Spinner spnCuisine;
     private FloatingActionButton fabSearch;
 
-    public SearchFragment() {
-        // Required empty public constructor
-    }
+    public SearchFragment() { }
 
     public SearchFragment(FragmentManager fragmentManager) {
         this.fragmentManager = fragmentManager;
@@ -61,6 +62,7 @@ public class SearchFragment extends Fragment {
 
         imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         clSearch = view.findViewById(R.id.clSearch);
+        etSearch = view.findViewById(R.id.etSearch);
         fabSearch = view.findViewById(R.id.fabSearch);
         spnCuisine = view.findViewById(R.id.spnCuisine);
         populateSpinner();
@@ -76,8 +78,10 @@ public class SearchFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Fragment searchResultFragment = new SearchResultFragment();
+                HashMap<String, String> args = new HashMap<>();
+                populateArgs(args);
                 try {
-                    Spoonacular.SearchRecipes(searchResultFragment);
+                    Spoonacular.SearchRecipes(searchResultFragment, args);
                 } catch (IOException e) {
                     Log.e(TAG, "Search error: ", e);
                 }
@@ -87,12 +91,23 @@ public class SearchFragment extends Fragment {
         });
     }
 
+    private void populateArgs(HashMap<String, String> args) {
+        if (!etSearch.getText().toString().isEmpty()) {
+            Log.i(TAG, "query: " + etSearch.getText().toString());
+            args.put("query", "\"" + etSearch.getText().toString() + "\"");
+        }
+        if (!spnCuisine.getSelectedItem().toString().equals("")) {
+            Log.i(TAG, "cuisine: " + spnCuisine.getSelectedItem().toString());
+            args.put("cuisine", spnCuisine.getSelectedItem().toString());
+        }
+    }
+
     private void populateSpinner() {
-        List<String> cuisines = new ArrayList<>(Arrays.asList(Recipe.Cuisines));
+        List<String> cuisines = new ArrayList<>(Recipe.CuisinesMap.values());
+        cuisines.sort(String::compareToIgnoreCase);
         cuisines.add(0, "");
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(),
                 R.layout.basic_dropdown_item, cuisines);
         spnCuisine.setAdapter(spinnerAdapter);
-
     }
 }
