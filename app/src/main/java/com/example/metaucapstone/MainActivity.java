@@ -39,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
         btnSearch = findViewById(R.id.action_search);
         btnFriends = findViewById(R.id.action_friends);
 
+        new Spoonacular(this);
+
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setIcon(R.drawable.ic_baseline_image_24);
@@ -53,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.action_search:
                         Log.i(TAG, "search");
-                        fragment = new SearchFragment();
+                        fragment = new SearchFragment(fragmentManager);
                         break;
                     case R.id.action_friends:
                         Log.i(TAG, "friends");

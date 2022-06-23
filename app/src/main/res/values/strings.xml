@@ -8,6 +8,7 @@
     <string name="action_search">search</string>
     <string name="action_friends">friends</string>
     <string name="logout">sign out</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search">Search:</string>
+    <string name="cuisine">Cuisine:</string>
+    <string name="results">Results</string>
 </resources>

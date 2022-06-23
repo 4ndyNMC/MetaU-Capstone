@@ -4,13 +4,17 @@ import java.util.List;
 
 public class Recipe {
 
+    public static final String[] Cuisines = new String[]{"African", "American", "British", "Cajun",
+    "Caribbean", "Chinese", "Eastern European", "European", "French", "German", "Greek", "Indian",
+    "Irish", "Italian", "Japanese", "Jewish", "Korean", "Latin American", "Mediterranean",
+    "Mexican", "Middle Eastern", "Nordic", "Southern", "Spanish", "Thai", "Vietnamese"};
+
     private String name;
     private String description;
     private Cuisine cuisine;
     private MealType mealType;
     private List<Diet> diets;
     private List<Intolerance> intolerances;
-
 
 
     public String getName() {
@@ -62,7 +66,7 @@ public class Recipe {
     }
 
     public enum Cuisine {
-        AFRICAN, AMERICAN, BRITISH, CAJUN, CARRIBBEAN, CHINESE, EASTERN_EUROPEAN,
+        AFRICAN, AMERICAN, BRITISH, CAJUN, CARIBBEAN, CHINESE, EASTERN_EUROPEAN,
         EUROPEAN, FRENCH, GERMAN, GREEK, INDIAN, IRISH, ITALIAN, JAPANESE, JEWISH,
         KOREAN, LATIN_AMERICAN, MEDITERRANEAN, MEXICAN, MIDDLE_EASTERN, NORDIC,
         SOUTHERN, SPANISH, THAI, VIETNAMESE
