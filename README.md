@@ -40,6 +40,9 @@ Users are able to find recipes for dishes based on a number of criteria, able to
 
 * User can view recipe history
 
+**Stretch goals**
+
+* have app read from API to set constants instead of hardcoding them
 
 ### 2. Navigation
 
