@@ -2,6 +2,7 @@ package com.example.metaucapstone;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -69,6 +70,9 @@ public class Spoonacular {
                                 RecyclerView rvRecipes = searchResultFragment.getView().findViewById(R.id.rvRecipes);
                                 RecipeAdapter adapter = (RecipeAdapter) rvRecipes.getAdapter();
                                 adapter.recipes.addAll(recipes);
+
+                                searchResultFragment.getView().findViewById(R.id.pbSearchResults)
+                                        .setVisibility(ProgressBar.GONE);
                                 adapter.notifyDataSetChanged();
                             } catch (JSONException e) {
                                 e.printStackTrace();

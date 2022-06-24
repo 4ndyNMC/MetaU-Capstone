@@ -11,12 +11,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SearchResultFragment extends Fragment {
 
+    public ProgressBar pbSearchResults;
     public RecyclerView rvRecipes;
     public RecipeAdapter adapter;
     public List<Recipe> recipes;
@@ -48,10 +50,14 @@ public class SearchResultFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        pbSearchResults = view.findViewById(R.id.pbSearchResults);
         rvRecipes = view.findViewById(R.id.rvRecipes);
+
         recipes = new ArrayList<>();
         adapter = new RecipeAdapter(getContext(), recipes);
         rvRecipes.setAdapter(adapter);
         rvRecipes.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        pbSearchResults.setVisibility(ProgressBar.VISIBLE);
     }
 }
