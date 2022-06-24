@@ -54,8 +54,4 @@ public class SearchResultFragment extends Fragment {
         rvRecipes.setAdapter(adapter);
         rvRecipes.setLayoutManager(new LinearLayoutManager(getContext()));
     }
-
-    public RecipeAdapter getAdapter() {
-        return adapter;
-    }
 }

@@ -5,6 +5,7 @@
       <map>
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.3179090146665221" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.4149797570850202" />
+        <entry key="app/src/main/res/layout/activity_recipe_information.xml" value="0.5813147755158252" />
         <entry key="app/src/main/res/layout/basic_dropdown_item.xml" value="0.25555555555555554" />
         <entry key="app/src/main/res/layout/fragment_search.xml" value="0.4302164218489379" />
         <entry key="app/src/main/res/layout/fragment_search_result.xml" value="0.34535352918836804" />

@@ -1,6 +1,7 @@
 package com.example.metaucapstone;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
@@ -58,7 +61,10 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             tvRecipeName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Spoonacular.GetRecipeInfo(recipe);
+                    Intent intent = new Intent(context, RecipeInformation.class);
+                    intent.putExtra("recipe", Parcels.wrap(recipe));
+                    context.startActivity(intent);
+                    // send the recipe object to the recipe info page
                 }
             });
         }

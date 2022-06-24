@@ -34,7 +34,7 @@ public class Spoonacular {
         RECIPE_INFO_URL = "https://api.spoonacular.com/recipes/";
     }
 
-    public static String SearchRecipes(Fragment searchResultFragment, Map<String, String> args) throws IOException {
+    public static void SearchRecipes(Fragment searchResultFragment, Map<String, String> args) throws IOException {
         HttpUrl.Builder requestUrl = HttpUrl.parse(COMPLEX_SEARCH_URL).newBuilder();
         for (String key : args.keySet()) {
             requestUrl.addQueryParameter(key, args.get(key));
@@ -78,10 +78,9 @@ public class Spoonacular {
                 }
             }
         });
-        return null;
     }
 
-    public static void GetRecipeInfo(Recipe recipe) {
+    public static void GetRecipeInfo(Recipe recipe, RecipeInformation activity) {
         String requestUrl = RECIPE_INFO_URL + recipe.getId() + "/information?includeNutrition=true&apiKey=" + API_KEY;
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
@@ -97,7 +96,19 @@ public class Spoonacular {
             @Override
             public void onResponse(Response response) throws IOException {
                 if (response.isSuccessful()) {
+                    String responseData = response.body().string();
                     Log.i(TAG, response.body().string());
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                recipe.loadData(new JSONObject(responseData));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            activity.loadDataIntoUI(recipe);
+                        }
+                    });
                 }
             }
         });

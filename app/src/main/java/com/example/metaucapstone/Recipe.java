@@ -3,11 +3,13 @@ package com.example.metaucapstone;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+@Parcel
 public class Recipe {
 
     public enum Cuisine {
@@ -32,6 +34,10 @@ public class Recipe {
         SULFITE, TREE_NUT, WHEAT
     }
 
+    public enum Tag {
+        VERY_HEALTHY, CHEAP, VERY_POPULAR, SUSTAINABLE
+    }
+
     public static final HashMap<Cuisine, String> CuisinesMap = new HashMap<Cuisine, String>() {{
         put(Cuisine.AFRICAN, "African"); put(Cuisine.AMERICAN, "American");
         put(Cuisine.BRITISH, "British"); put(Cuisine.CAJUN, "Cajun");
@@ -48,19 +54,34 @@ public class Recipe {
         put(Cuisine.THAI, "Thai"); put(Cuisine.VIETNAMESE, "Vietnamese");
     }};
 
+    public static final HashMap<Diet, String> DietMap = new HashMap<Diet, String>() {{
+        put(Diet.GLUTEN_FREE, "Gluten-free"); put(Diet.KETOGENIC, "Ketogenic");
+        put(Diet.VEGETARIAN, "Vegetarian"); put(Diet.LACTO_VEGETARIAN, "Lacto-Vegetarian");
+        put(Diet.OVO_VEGETARIAN, "Ovo-Vegetarian"); put(Diet.VEGAN, "Vegan");
+        put(Diet.PESCETARIAN, "Pescetarian"); put(Diet.PALEO, "Paleo");
+        put(Diet.PRIMAL, "Primal"); put(Diet.LOW_FODMAP, "Low Fodmap");
+        put(Diet.WHOLE30, "Whole 30");
+    }};
+
     private String name;
     private String id;
     private String imageUrl;
     private Cuisine cuisine;
     private MealType mealType;
     private List<Diet> diets;
-    private List<Intolerance> intolerances;
+    private List<Intolerance> intoleranceFree;
+    private List<Tag> tags;
 
     public Recipe() { }
 
     public Recipe(JSONObject jsonObject) throws JSONException {
+        diets = new ArrayList<>();
+        intoleranceFree = new ArrayList<>();
+        tags = new ArrayList<>();
+
         name = jsonObject.getString("title");
         id = jsonObject.getString("id");
+        imageUrl = jsonObject.getString("image");
     }
 
     public Recipe(String name) {
@@ -71,52 +92,40 @@ public class Recipe {
         return name;
     }
 
-    public String getId() {
-        return id;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getId() {
+        return id;
     }
 
     public String getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
     public Cuisine getCuisine() {
         return cuisine;
-    }
-
-    public void setCuisine(Cuisine cuisine) {
-        this.cuisine = cuisine;
     }
 
     public MealType getMealType() {
         return mealType;
     }
 
-    public void setMealType(MealType mealType) {
-        this.mealType = mealType;
-    }
-
     public List<Diet> getDiets() {
         return diets;
     }
 
-    public void setDiets(List<Diet> diets) {
-        this.diets = diets;
+    public List<Intolerance> getIntoleranceFree() {
+        return intoleranceFree;
     }
 
-    public List<Intolerance> getIntolerances() {
-        return intolerances;
-    }
-
-    public void setIntolerances(List<Intolerance> intolerances) {
-        this.intolerances = intolerances;
+    public void loadData(JSONObject jsonObject) throws JSONException {
+        if (jsonObject.getBoolean("vegetarian")) diets.add(Diet.VEGETARIAN);
+        if (jsonObject.getBoolean("vegan")) diets.add(Diet.VEGAN);
+        if (jsonObject.getBoolean("glutenFree")) intoleranceFree.add(Intolerance.GLUTEN);
+        if (jsonObject.getBoolean("dairyFree")) intoleranceFree.add(Intolerance.DAIRY);
+        if (jsonObject.getBoolean("veryHealthy")) tags.add(Tag.VERY_HEALTHY);
     }
 
     public static List<Recipe> fromJsonArray(JSONArray jsonArray) throws JSONException {
