@@ -1,4 +1,6 @@
-package com.example.metaucapstone;
+package com.example.metaucapstone.models;
+
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -8,6 +10,7 @@ import org.parceler.Parcel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.PrimitiveIterator;
 
 @Parcel
 public class Recipe {
@@ -66,6 +69,7 @@ public class Recipe {
     private String name;
     private String id;
     private String imageUrl;
+    private String summary;
     private Cuisine cuisine;
     private MealType mealType;
     private List<Diet> diets;
@@ -104,6 +108,10 @@ public class Recipe {
         return imageUrl;
     }
 
+    public String getSummary() {
+        return summary;
+    }
+
     public Cuisine getCuisine() {
         return cuisine;
     }
@@ -120,12 +128,17 @@ public class Recipe {
         return intoleranceFree;
     }
 
+    public List<Tag> getTags() {
+        return tags;
+    }
+
     public void loadData(JSONObject jsonObject) throws JSONException {
         if (jsonObject.getBoolean("vegetarian")) diets.add(Diet.VEGETARIAN);
         if (jsonObject.getBoolean("vegan")) diets.add(Diet.VEGAN);
         if (jsonObject.getBoolean("glutenFree")) intoleranceFree.add(Intolerance.GLUTEN);
         if (jsonObject.getBoolean("dairyFree")) intoleranceFree.add(Intolerance.DAIRY);
         if (jsonObject.getBoolean("veryHealthy")) tags.add(Tag.VERY_HEALTHY);
+        summary = jsonObject.getString("summary");
     }
 
     public static List<Recipe> fromJsonArray(JSONArray jsonArray) throws JSONException {
@@ -135,5 +148,4 @@ public class Recipe {
         }
         return recipes;
     }
-
 }

@@ -16,7 +16,7 @@
         android:theme="@style/Theme.MetaUCapstone"
         tools:targetApi="31">
         <activity
-            android:name=".RecipeInformation"
+            android:name=".RecipeInformationActivity"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"

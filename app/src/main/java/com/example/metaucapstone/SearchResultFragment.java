@@ -12,12 +12,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import com.example.metaucapstone.models.Recipe;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SearchResultFragment extends Fragment {
 
+    public TextView tvNoResults;
     public ProgressBar pbSearchResults;
     public RecyclerView rvRecipes;
     public RecipeAdapter adapter;
@@ -50,8 +54,11 @@ public class SearchResultFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        tvNoResults = view.findViewById(R.id.tvNoResults);
         pbSearchResults = view.findViewById(R.id.pbSearchResults);
         rvRecipes = view.findViewById(R.id.rvRecipes);
+
+        tvNoResults.setVisibility(View.GONE);
 
         recipes = new ArrayList<>();
         adapter = new RecipeAdapter(getContext(), recipes);

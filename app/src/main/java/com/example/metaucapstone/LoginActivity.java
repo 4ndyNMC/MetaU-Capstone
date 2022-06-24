@@ -7,20 +7,25 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.metaucapstone.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -100,6 +105,8 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            User user = new User(auth.getCurrentUser().getEmail());
+                            storeUser(user);
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
                         } else if (task.getException().toString().contains("already in use")) {
@@ -112,6 +119,12 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         }
                 });
+    }
+
+    private void storeUser(User user) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
+                .child("Users").child(auth.getCurrentUser().getUid());
+        reference.setValue(user);
     }
 
     private void login(String username, String password) {

@@ -1,4 +1,4 @@
-package com.example.metaucapstone;
+package com.example.metaucapstone.models;
 
 import java.util.ArrayList;
 import java.util.List;

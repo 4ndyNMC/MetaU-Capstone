@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.metaucapstone.models.Recipe;
+
 import org.parceler.Parcels;
 
 import java.util.List;
@@ -61,7 +63,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             tvRecipeName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context, RecipeInformation.class);
+                    Intent intent = new Intent(context, RecipeInformationActivity.class);
                     intent.putExtra("recipe", Parcels.wrap(recipe));
                     context.startActivity(intent);
                     // send the recipe object to the recipe info page

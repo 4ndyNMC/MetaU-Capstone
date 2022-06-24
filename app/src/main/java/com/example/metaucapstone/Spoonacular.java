@@ -2,12 +2,13 @@ package com.example.metaucapstone;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.metaucapstone.models.Recipe;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.OkHttpClient;
@@ -65,7 +66,7 @@ public class Spoonacular {
                                 JSONArray jsonArray = json.getJSONArray("results");
                                 List<Recipe> recipes = Recipe.fromJsonArray(jsonArray);
                                 if (recipes.size() == 0) {
-                                    recipes.add(new Recipe("Sorry, there were no search results ):"));
+                                    searchResultFragment.getView().findViewById(R.id.tvNoResults).setVisibility(View.VISIBLE);
                                 }
                                 RecyclerView rvRecipes = searchResultFragment.getView().findViewById(R.id.rvRecipes);
                                 RecipeAdapter adapter = (RecipeAdapter) rvRecipes.getAdapter();
@@ -84,12 +85,13 @@ public class Spoonacular {
         });
     }
 
-    public static void GetRecipeInfo(Recipe recipe, RecipeInformation activity) {
+    public static void GetRecipeInfo(Recipe recipe, RecipeInformationActivity activity) {
         String requestUrl = RECIPE_INFO_URL + recipe.getId() + "/information?includeNutrition=true&apiKey=" + API_KEY;
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(requestUrl)
                 .build();
+        Log.i(TAG, requestUrl);
 
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -101,7 +103,7 @@ public class Spoonacular {
             public void onResponse(Response response) throws IOException {
                 if (response.isSuccessful()) {
                     String responseData = response.body().string();
-                    Log.i(TAG, response.body().string());
+                    Log.i(TAG, responseData);
                     activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
