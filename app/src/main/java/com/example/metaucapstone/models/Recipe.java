@@ -2,10 +2,16 @@ package com.example.metaucapstone.models;
 
 import android.util.Log;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcel;
+import org.parceler.ParcelConverter;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,6 +81,7 @@ public class Recipe {
     private List<Diet> diets;
     private List<Intolerance> intoleranceFree;
     private List<Tag> tags;
+    private List<String> users;
 
     public Recipe() { }
 
@@ -82,6 +89,7 @@ public class Recipe {
         diets = new ArrayList<>();
         intoleranceFree = new ArrayList<>();
         tags = new ArrayList<>();
+        users = new ArrayList<>();
 
         name = jsonObject.getString("title");
         id = jsonObject.getString("id");
@@ -132,6 +140,17 @@ public class Recipe {
         return tags;
     }
 
+    public void addUser(String user) {
+        users.add(user);
+    }
+
+    public List<String> getUsers() {
+        if (users == null) {
+            users = new ArrayList<>();
+        }
+        return users;
+    }
+
     public void loadData(JSONObject jsonObject) throws JSONException {
         if (jsonObject.getBoolean("vegetarian")) diets.add(Diet.VEGETARIAN);
         if (jsonObject.getBoolean("vegan")) diets.add(Diet.VEGAN);
@@ -148,4 +167,5 @@ public class Recipe {
         }
         return recipes;
     }
+
 }

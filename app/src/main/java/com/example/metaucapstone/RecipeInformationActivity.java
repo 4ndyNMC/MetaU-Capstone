@@ -2,6 +2,7 @@ package com.example.metaucapstone;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import com.example.metaucapstone.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,16 +33,22 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.parceler.Parcels;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class RecipeInformationActivity extends AppCompatActivity {
 
     public static final String TAG = "RecipeInformationActivity";
 
+    ConstraintLayout clRecipeInfo;
     TextView tvTitle;
     TextView tvSummary;
     ImageView ivRecipeInfo;
     ProgressBar pbRecipeInfo;
     FloatingActionButton fabSave;
     Recipe recipe;
+
+    boolean saved;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +60,7 @@ public class RecipeInformationActivity extends AppCompatActivity {
         getSupportActionBar().setIcon(R.drawable.ic_baseline_image_24);
 
         recipe = Parcels.unwrap(getIntent().getParcelableExtra("recipe"));
+        clRecipeInfo = findViewById(R.id.clRecipeInfo);
         tvTitle = findViewById(R.id.tvRecipeInfoName);
         tvSummary = findViewById(R.id.tvSummary);
         ivRecipeInfo = findViewById(R.id.ivRecipeInfo);
@@ -62,54 +71,89 @@ public class RecipeInformationActivity extends AppCompatActivity {
         pbRecipeInfo.setVisibility(ProgressBar.VISIBLE);
         Spoonacular.GetRecipeInfo(recipe, this);
 
+        DatabaseReference recipeUsersRef = FirebaseDatabase.getInstance().getReference()
+                        .child("Recipes").child(recipe.getId()).child("Users");
+        recipeUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.hasChild(FirebaseAuth.getInstance().getCurrentUser().getUid())) saved = true;
+                else saved = false;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
+
         fabSave.setVisibility(View.GONE);
         fabSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (saved) {
+                    Snackbar.make(clRecipeInfo, "You've already saved this post", Snackbar.LENGTH_LONG).show();
+                    return;
+                }
                 saveRecipe();
             }
         });
     }
 
     private void saveRecipe() {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
-                .child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+        saved = true;
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference recipeReference = FirebaseDatabase.getInstance().getReference()
+                .child("Recipes");
+        DatabaseReference userReference = FirebaseDatabase.getInstance().getReference()
+                .child("Users").child(uid);
+
+        recipeReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                User user = snapshot.getValue(User.class);
-                user.saveRecipe(recipe);
-                reference.setValue(user);
-                Log.i(TAG, "recipe saved");
+                if (!snapshot.hasChild(recipe.getId())) {
+                    Log.i(TAG, "does not have id");
+                    recipe.addUser(uid);
+                    recipeReference.child(recipe.getId()).child("Object").setValue(recipe);
+                } else {
+                    Log.i(TAG, "has id");
+                    Recipe recipeFromDb = snapshot.child(recipe.getId()).child("Object")
+                            .getValue(Recipe.class);
+                    recipeFromDb.addUser(uid);
+                    recipeReference.child(recipe.getId()).child("Object").setValue(recipeFromDb);
+                }
+                recipeReference.child(recipe.getId()).child("Users").child(uid)
+                        .setValue(true);
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
+            public void onCancelled(@NonNull DatabaseError error) { }
         });
-//        reference.addValueEventListener(new ValueEventListener() {
+
+        userReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user = snapshot.child("Object").getValue(User.class);
+                user.saveRecipe(recipe);
+                userReference.child("Object").setValue(user);
+                userReference.child("Recipes").child(recipe.getId())
+                        .setValue(true);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
+
+//        userReference.addListenerForSingleValueEvent(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                for (DataSnapshot userSnapshot : snapshot.getChildren()) {
-//                    Log.i(TAG, userSnapshot.getKey() + " | " + FirebaseAuth.getInstance().getCurrentUser().getUid());
-//                    if (userSnapshot.getKey().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-//                        User user = userSnapshot.getValue(User.class);
-//                        user.saveRecipe(recipe);
-//                        reference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user)
-//                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                    @Override
-//                                    public void onComplete(@NonNull Task<Void> task) {
-//                                        Log.i(TAG, "User recipe saved!");
-//                                    }
-//                                });
-//                        Log.i(TAG, user.getSaved().toString());
-//                    }
-//                }
+//                User user = snapshot.getValue(User.class);
+//                user.saveRecipe(recipe);
+//                userReference.setValue(user);
+//                Log.i(TAG, "recipe saved");
 //            }
 //
 //            @Override
-//            public void onCancelled(@NonNull DatabaseError error) { }
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
 //        });
     }
 

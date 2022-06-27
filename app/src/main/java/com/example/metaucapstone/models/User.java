@@ -7,13 +7,13 @@ public class User {
 
     private String name;
     private List<User> following;
-    private List<Recipe> saved;
+    private List<String> savedRecipes;
 
     public User() { }
 
     public User(String name) {
         following = new ArrayList<>();
-        saved = new ArrayList<>();
+        savedRecipes = new ArrayList<>();
         this.name = name;
     }
 
@@ -25,14 +25,14 @@ public class User {
         return following;
     }
 
-    public List<Recipe> getSaved() {
-        return saved;
+    public List<String> getSaved() {
+        return savedRecipes;
     }
 
     public void saveRecipe(Recipe recipe) {
-        if (saved == null) {
-            saved = new ArrayList<>();
+        if (savedRecipes == null) {
+            savedRecipes = new ArrayList<>();
         }
-        saved.add(recipe);
+        savedRecipes.add(recipe.getId());
     }
 }

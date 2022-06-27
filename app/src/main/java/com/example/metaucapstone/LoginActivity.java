@@ -126,7 +126,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void storeUser(User user) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
-                .child("Users").child(auth.getCurrentUser().getUid());
+                .child("Users").child(auth.getCurrentUser().getUid()).child("Object");
         reference.setValue(user);
     }
 
