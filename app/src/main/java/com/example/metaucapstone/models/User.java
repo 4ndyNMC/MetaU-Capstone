@@ -28,4 +28,11 @@ public class User {
     public List<Recipe> getSaved() {
         return saved;
     }
+
+    public void saveRecipe(Recipe recipe) {
+        if (saved == null) {
+            saved = new ArrayList<>();
+        }
+        saved.add(recipe);
+    }
 }

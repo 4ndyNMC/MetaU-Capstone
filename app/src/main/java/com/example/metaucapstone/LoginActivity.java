@@ -27,6 +27,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class LoginActivity extends AppCompatActivity {
 
     public static final String TAG = "LoginActivity";
@@ -148,7 +151,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private boolean checkInput() {
-        if (etUsername.getText().toString().isEmpty() || etPassword.getText().toString().isEmpty()) {
+        Pattern validEmail = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = validEmail.matcher(etUsername.getText().toString());
+        if (!matcher.find()) {
+            Snackbar.make(clLogin, "Please enter a valid email", Snackbar.LENGTH_LONG).show();
+            return false;
+        } else if (etUsername.getText().toString().isEmpty() || etPassword.getText().toString().isEmpty()) {
             Snackbar.make(clLogin, "Please enter a username AND password",
                     Snackbar.LENGTH_LONG).show();
             return false;
