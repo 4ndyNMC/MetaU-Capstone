@@ -13,4 +13,10 @@
     <string name="results">Results</string>
     <string name="no_results">Sorry, there were no search results ):</string>
     <string name="no_saved">You don\'t have any recipes saved!</string>
+    <string name="error_email_in_use">That email is already in use</string>
+    <string name="error_incorrect_password">That password is incorrect</string>
+    <string name="error_snackbar">Sorry, there was an error</string>
+    <string name="feedback_email">Please enter a valid email</string>
+    <string name="feedback_username_and_password">Please enter a username and password</string>
+    <string name="feedback_longer_password">Please create a longer password</string>
 </resources>

@@ -33,6 +33,7 @@ import java.util.regex.Pattern;
 public class LoginActivity extends AppCompatActivity {
 
     public static final String TAG = "LoginActivity";
+    public static final int MIN_PASSWORD_LENGTH = 6;
 
     private InputMethodManager imm;
     private ConstraintLayout clLogin;
@@ -111,13 +112,13 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
             } else if (task.getException().toString().contains("already in use")) {
-                Snackbar.make(clLogin, "That email is already in use",
+                Snackbar.make(clLogin, R.string.error_email_in_use,
                         Snackbar.LENGTH_LONG).show();
             } else if (task.getException().toString().contains("password is invalid")) {
-                Snackbar.make(clLogin, "Sorry, the password is incorrect",
+                Snackbar.make(clLogin, R.string.error_incorrect_password,
                         Snackbar.LENGTH_LONG).show();
             } else {
-                Snackbar.make(clLogin, "Sorry, there was an error",
+                Snackbar.make(clLogin, R.string.error_snackbar,
                         Snackbar.LENGTH_LONG).show();
             }
         }
@@ -144,14 +145,14 @@ public class LoginActivity extends AppCompatActivity {
         Pattern validEmail = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
         Matcher matcher = validEmail.matcher(etUsername.getText().toString());
         if (!matcher.find()) {
-            Snackbar.make(clLogin, "Please enter a valid email", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(clLogin, R.string.feedback_email, Snackbar.LENGTH_LONG).show();
             return false;
         } else if (etUsername.getText().toString().isEmpty() || etPassword.getText().toString().isEmpty()) {
-            Snackbar.make(clLogin, "Please enter a username AND password",
+            Snackbar.make(clLogin, R.string.feedback_username_and_password,
                     Snackbar.LENGTH_LONG).show();
             return false;
-        } else if (etPassword.getText().toString().length() < 6) {
-            Snackbar.make(clLogin, "Please create a longer password",
+        } else if (etPassword.getText().toString().length() < MIN_PASSWORD_LENGTH) {
+            Snackbar.make(clLogin, R.string.feedback_longer_password,
                     Snackbar.LENGTH_LONG).show();
             return false;
         }
