@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.action_saved:
                         Log.i(TAG, "saved");
-                        fragment = new SearchFragment();
+                        fragment = new SavedFragment();
                         break;
                     case R.id.action_search:
                         Log.i(TAG, "search");

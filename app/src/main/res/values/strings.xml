@@ -4,12 +4,13 @@
     <string name="signup">sign up</string>
     <string name="username">email</string>
     <string name="password">password</string>
-    <string name="action_saved">saved</string>
-    <string name="action_search">search</string>
-    <string name="action_friends">friends</string>
+    <string name="action_saved">Saved</string>
+    <string name="action_search">Search</string>
+    <string name="action_friends">Friends</string>
     <string name="logout">sign out</string>
     <string name="search">Search:</string>
     <string name="cuisine">Cuisine:</string>
     <string name="results">Results</string>
     <string name="no_results">Sorry, there were no search results ):</string>
+    <string name="no_saved">You don\'t have any recipes saved!</string>
 </resources>
