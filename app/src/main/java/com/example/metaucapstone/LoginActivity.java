@@ -43,6 +43,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
 
+    boolean signingIn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,10 +87,6 @@ public class LoginActivity extends AppCompatActivity {
             }
             String username = etUsername.getText().toString();
             String password = etPassword.getText().toString();
-            if (userExists(username)) {
-                Snackbar.make(clLogin, "That email is already registered", Snackbar.LENGTH_LONG);
-                return;
-            }
             signup(username, password);
 
         }
@@ -103,30 +101,36 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private boolean userExists(String username) {
-        return false;
+    private OnCompleteListener authRequestComplete = new OnCompleteListener<AuthResult>() {
+        @Override
+        public void onComplete(@NonNull Task task) {
+            if (task.isSuccessful()) {
+                if (signingIn) {
+                    User user = new User(auth.getCurrentUser().getEmail());
+                    storeUser(user);
+                }
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            } else if (task.getException().toString().contains("already in use")) {
+                Snackbar.make(clLogin, "That email is already in use",
+                        Snackbar.LENGTH_LONG).show();
+            } else if (task.getException().toString().contains("password is invalid")) {
+                Snackbar.make(clLogin, "Sorry, the password is incorrect",
+                        Snackbar.LENGTH_LONG).show();
+            } else {
+                Snackbar.make(clLogin, "Sorry, there was an error",
+                        Snackbar.LENGTH_LONG).show();
+            }
+        }
+    };
+
+    private void login(String username, String password) {
+        signingIn = false;
+        auth.signInWithEmailAndPassword(username, password).addOnCompleteListener(authRequestComplete);
     }
 
     private void signup(String username, String password) {
-        auth.createUserWithEmailAndPassword(username, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            User user = new User(auth.getCurrentUser().getEmail());
-                            storeUser(user);
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                            finish();
-                        } else if (task.getException().toString().contains("already in use")) {
-                            Snackbar.make(clLogin, "That email is already in use",
-                                    Snackbar.LENGTH_LONG).show();
-                        } else {
-                            Log.i(TAG, task.getResult().toString());
-                            Snackbar.make(clLogin, "Sorry, there was an error signing up",
-                                    Snackbar.LENGTH_LONG).show();
-                            }
-                        }
-                });
+        signingIn = true;
+        auth.createUserWithEmailAndPassword(username, password).addOnCompleteListener(authRequestComplete);
     }
 
     private void storeUser(User user) {
@@ -135,25 +139,6 @@ public class LoginActivity extends AppCompatActivity {
         reference.setValue(user);
     }
 
-    private void login(String username, String password) {
-        auth.signInWithEmailAndPassword(username, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                            finish();
-                        } else if (task.getException().toString().contains("password is invalid")) {
-                            Snackbar.make(clLogin, "Sorry, the password is incorrect",
-                                    Snackbar.LENGTH_LONG).show();
-                        } else {
-                            Snackbar.make(clLogin, "Sorry, there was an error logging in",
-                                    Snackbar.LENGTH_LONG).show();
-
-                        }
-                    }
-                });
-    }
 
     private boolean checkInput() {
         Pattern validEmail = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
