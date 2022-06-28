@@ -113,12 +113,17 @@ public class RecipeInformationActivity extends AppCompatActivity {
         userReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
+                User user = snapshot.child("Object").getValue(User.class);
+                user.removeRecipe(recipe);
+                userReference.child("Object").setValue(user);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) { }
         });
+        userReference.child("Recipes").child(recipe.getId()).removeValue();
+
+        fabSave.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_sticky_note_2_24));
     }
 
     private void saveRecipe() {
@@ -164,21 +169,6 @@ public class RecipeInformationActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) { }
         });
-
-//        userReference.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                User user = snapshot.getValue(User.class);
-//                user.saveRecipe(recipe);
-//                userReference.setValue(user);
-//                Log.i(TAG, "recipe saved");
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
     }
 
     public void loadDataIntoUI(Recipe recipe) {

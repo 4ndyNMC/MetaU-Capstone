@@ -35,4 +35,8 @@ public class User {
         }
         saved.add(recipe.getId());
     }
+
+    public void removeRecipe(Recipe recipe) {
+        saved.remove(recipe.getId());
+    }
 }
