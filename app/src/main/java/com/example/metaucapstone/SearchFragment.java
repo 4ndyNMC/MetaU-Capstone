@@ -64,31 +64,36 @@ public class SearchFragment extends Fragment {
         etSearch = view.findViewById(R.id.etSearch);
         fabSearch = view.findViewById(R.id.fabSearch);
         spnCuisine = view.findViewById(R.id.spnCuisine);
+
         populateSpinner();
 
-        clSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imm.hideSoftInputFromWindow(clSearch.getWindowToken(), 0);
-            }
-        });
-
-        fabSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment searchResultFragment = new SearchResultFragment();
-                HashMap<String, String> args = new HashMap<>();
-                populateArgs(args);
-                try {
-                    Spoonacular.SearchRecipes(searchResultFragment, args);
-                } catch (IOException e) {
-                    Log.e(TAG, "Search error: ", e);
-                }
-                fragmentManager.beginTransaction().replace(R.id.flContainer,
-                        searchResultFragment).commit();
-            }
-        });
+        clSearch.setOnClickListener(clSearchClicked);
+        fabSearch.setOnClickListener(fabSearchClicked);
     }
+
+    private View.OnClickListener clSearchClicked = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            imm.hideSoftInputFromWindow(clSearch.getWindowToken(), 0);
+        }
+    };
+
+    private View.OnClickListener fabSearchClicked = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Fragment searchResultFragment = new SearchResultFragment();
+            HashMap<String, String> args = new HashMap<>();
+            populateArgs(args);
+            try {
+                Spoonacular.SearchRecipes(searchResultFragment, args);
+            } catch (IOException e) {
+                Log.e(TAG, "Search error: ", e);
+            }
+            fragmentManager.beginTransaction().replace(R.id.flContainer,
+                    searchResultFragment).commit();
+
+        }
+    };
 
     private void populateArgs(HashMap<String, String> args) {
         if (!etSearch.getText().toString().isEmpty()) {

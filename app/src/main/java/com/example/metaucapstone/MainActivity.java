@@ -50,29 +50,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setIcon(R.drawable.ic_baseline_image_24);
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.action_saved:
-                        Log.i(TAG, "saved");
-                        fragment = new SavedFragment();
-                        break;
-                    case R.id.action_search:
-                        Log.i(TAG, "search");
-                        fragment = new SearchFragment(fragmentManager);
-                        break;
-                    case R.id.action_friends:
-                        Log.i(TAG, "friends");
-                        fragment = new SearchFragment();
-                        break;
-                    default: break;
-                }
-                fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
-                return true;
-            }
-        });
-
+        bottomNavigationView.setOnNavigationItemSelectedListener(bottomNavigationClicked);
         btnSearch.performClick();
     }
 
@@ -93,4 +71,24 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener bottomNavigationClicked = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.action_saved:
+                    fragment = new SavedFragment();
+                    break;
+                case R.id.action_search:
+                    fragment = new SearchFragment(fragmentManager);
+                    break;
+                case R.id.action_friends:
+                    fragment = new SearchFragment();
+                    break;
+                default: break;
+            }
+            fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
+            return true;
+        }
+    };
 }

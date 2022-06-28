@@ -29,15 +29,6 @@ public class SearchResultFragment extends Fragment {
 
     public SearchResultFragment() { }
 
-//    public static SearchResultFragment newInstance(String param1, String param2) {
-//        SearchResultFragment fragment = new SearchResultFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -57,37 +57,42 @@ public class LoginActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imm.hideSoftInputFromWindow(clLogin.getWindowToken(), 0);
-                if (!checkInput()) {
-                    return;
-                };
-                String username = etUsername.getText().toString();
-                String password = etPassword.getText().toString();
-                login(username, password);
-            }
-        });
-
-        btnSignup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imm.hideSoftInputFromWindow(clLogin.getWindowToken(), 0);
-                if (!checkInput()) {
-                    return;
-                }
-                String username = etUsername.getText().toString();
-                String password = etPassword.getText().toString();
-                if (userExists(username)) {
-                    Snackbar.make(clLogin, "That email is already registered", Snackbar.LENGTH_LONG);
-                    return;
-                }
-                signup(username, password);
-            }
-        });
+        btnLogin.setOnClickListener(btnLoginClicked);
+        btnSignup.setOnClickListener(btnSignupClicked);
 
     }
+
+    private View.OnClickListener btnLoginClicked = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            imm.hideSoftInputFromWindow(clLogin.getWindowToken(), 0);
+            if (!checkInput()) {
+                return;
+            };
+            String username = etUsername.getText().toString();
+            String password = etPassword.getText().toString();
+            login(username, password);
+
+        }
+    };
+
+    private View.OnClickListener btnSignupClicked = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            imm.hideSoftInputFromWindow(clLogin.getWindowToken(), 0);
+            if (!checkInput()) {
+                return;
+            }
+            String username = etUsername.getText().toString();
+            String password = etPassword.getText().toString();
+            if (userExists(username)) {
+                Snackbar.make(clLogin, "That email is already registered", Snackbar.LENGTH_LONG);
+                return;
+            }
+            signup(username, password);
+
+        }
+    };
 
     @Override
     protected void onStart() {

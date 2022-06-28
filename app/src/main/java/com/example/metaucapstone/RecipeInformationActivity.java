@@ -90,19 +90,16 @@ public class RecipeInformationActivity extends AppCompatActivity {
         });
 
         fabSave.setVisibility(View.GONE);
-        fabSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (saved) {
-//                    Snackbar.make(clRecipeInfo, "You've already saved this post",
-//                            Snackbar.LENGTH_LONG).show();
-                    unsaveRecipe();
-                    return;
-                }
-                saveRecipe();
-            }
-        });
+        fabSave.setOnClickListener(fabSaveClicked);
     }
+
+    private View.OnClickListener fabSaveClicked = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (saved) unsaveRecipe();
+            else saveRecipe();
+        }
+    };
 
     private void unsaveRecipe() {
         saved = false;
@@ -169,6 +166,7 @@ public class RecipeInformationActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) { }
         });
+        fabSave.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_close_24));
     }
 
     public void loadDataIntoUI(Recipe recipe) {
