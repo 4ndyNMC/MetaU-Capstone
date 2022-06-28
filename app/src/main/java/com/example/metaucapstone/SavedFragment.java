@@ -52,7 +52,23 @@ public class SavedFragment extends SearchResultFragment {
 
         pbSearchResults.setVisibility(View.VISIBLE);
 
-        queryData(this);
+        FirebaseDatabase.getInstance().getReference()
+                        .child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                        .child("Recipes").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (!snapshot.hasChildren()) {
+                            tvNoResults.setVisibility(View.VISIBLE);
+                            pbSearchResults.setVisibility(View.GONE);
+                        }
+                        else {
+                            queryData(SavedFragment.this);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) { }
+                });
     }
 
     private void queryData(Fragment fragment) {
@@ -80,11 +96,8 @@ public class SavedFragment extends SearchResultFragment {
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError error) { }
                             });
-//                            .get().getResult().getValue(Recipe.class);
-//                    recipesFromDb.add(recipeFromDb);
                 }
                 fragment.getView().findViewById(R.id.pbSearchResults).setVisibility(View.GONE);
-                adapter.notifyDataSetChanged();
             }
 
             @Override
