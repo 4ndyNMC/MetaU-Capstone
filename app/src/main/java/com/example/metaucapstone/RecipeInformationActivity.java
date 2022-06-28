@@ -76,9 +76,13 @@ public class RecipeInformationActivity extends AppCompatActivity {
         recipeUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.hasChild(FirebaseAuth.getInstance().getCurrentUser().getUid()))
+                if (snapshot.hasChild(FirebaseAuth.getInstance().getCurrentUser().getUid())){
                     saved = true;
-                else saved = false;
+                    fabSave.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_close_24));
+                }
+                else {
+                    saved = false;
+                }
             }
 
             @Override
@@ -90,12 +94,30 @@ public class RecipeInformationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (saved) {
-                    Snackbar.make(clRecipeInfo, "You've already saved this post",
-                            Snackbar.LENGTH_LONG).show();
+//                    Snackbar.make(clRecipeInfo, "You've already saved this post",
+//                            Snackbar.LENGTH_LONG).show();
+                    unsaveRecipe();
                     return;
                 }
                 saveRecipe();
             }
+        });
+    }
+
+    private void unsaveRecipe() {
+        saved = false;
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference userReference = FirebaseDatabase.getInstance().getReference()
+                .child("Users").child(uid);
+
+        userReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
         });
     }
 
