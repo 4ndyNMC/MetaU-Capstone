@@ -76,7 +76,8 @@ public class RecipeInformationActivity extends AppCompatActivity {
         recipeUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.hasChild(FirebaseAuth.getInstance().getCurrentUser().getUid())) saved = true;
+                if (snapshot.hasChild(FirebaseAuth.getInstance().getCurrentUser().getUid()))
+                    saved = true;
                 else saved = false;
             }
 
@@ -89,7 +90,8 @@ public class RecipeInformationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (saved) {
-                    Snackbar.make(clRecipeInfo, "You've already saved this post", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(clRecipeInfo, "You've already saved this post",
+                            Snackbar.LENGTH_LONG).show();
                     return;
                 }
                 saveRecipe();
@@ -180,7 +182,8 @@ public class RecipeInformationActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.btnLogout:
                 FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(RecipeInformationActivity.this, LoginActivity.class));
+                startActivity(new Intent(RecipeInformationActivity.this,
+                        LoginActivity.class));
                 finish();
                 break;
         }

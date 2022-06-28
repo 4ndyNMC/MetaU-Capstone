@@ -6,12 +6,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.metaucapstone.models.Recipe;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,8 +23,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SavedFragment extends SearchResultFragment {
+
+    public static final String TAG = "SavedFragment";
 
     TextView tvResults;
 
@@ -46,19 +52,39 @@ public class SavedFragment extends SearchResultFragment {
 
         pbSearchResults.setVisibility(View.VISIBLE);
 
-        queryData();
+        queryData(this);
     }
 
-    private void queryData() {
+    private void queryData(Fragment fragment) {
         DatabaseReference savedReference = FirebaseDatabase.getInstance().getReference()
                 .child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child("Recipes");
+        DatabaseReference recipeReference = FirebaseDatabase.getInstance().getReference()
                 .child("Recipes");
         savedReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                RecyclerView rvRecipes = fragment.getView().findViewById(R.id.rvRecipes);
+                RecipeAdapter adapter = (RecipeAdapter) rvRecipes.getAdapter();
                 for (DataSnapshot recipeSnapshot : snapshot.getChildren()) {
-                    
+                    recipeReference.child(recipeSnapshot.getKey()).child("Object")
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    Recipe recipeFromDb = snapshot.getValue(Recipe.class);
+                                    adapter.recipes.add(recipeFromDb);
+                                    adapter.notifyDataSetChanged();
+                                    Log.i(TAG, recipeFromDb.getName() + " added.");
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) { }
+                            });
+//                            .get().getResult().getValue(Recipe.class);
+//                    recipesFromDb.add(recipeFromDb);
                 }
+                fragment.getView().findViewById(R.id.pbSearchResults).setVisibility(View.GONE);
+                adapter.notifyDataSetChanged();
             }
 
             @Override
