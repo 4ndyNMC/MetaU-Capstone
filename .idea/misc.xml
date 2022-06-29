@@ -6,15 +6,17 @@
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.3179090146665221" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.4149797570850202" />
         <entry key="app/src/main/res/layout/activity_recipe_information.xml" value="0.30732185559395025" />
+        <entry key="app/src/main/res/layout/activity_settings.xml" value="0.6502564102564102" />
         <entry key="app/src/main/res/layout/basic_dropdown_item.xml" value="0.25555555555555554" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.2558139534883721" />
         <entry key="app/src/main/res/layout/fragment_saved.xml" value="0.3781097412109375" />
-        <entry key="app/src/main/res/layout/fragment_search.xml" value="0.4302164218489379" />
+        <entry key="app/src/main/res/layout/fragment_search.xml" value="0.3793103448275862" />
         <entry key="app/src/main/res/layout/fragment_search_result.xml" value="0.34535352918836804" />
         <entry key="app/src/main/res/layout/item_recipe.xml" value="0.4009259259259259" />
         <entry key="app/src/main/res/layout/spinner_background.xml" value="0.25555555555555554" />
         <entry key="app/src/main/res/menu/menu_bottom_navigation.xml" value="0.43023359510633674" />
         <entry key="app/src/main/res/menu/menu_top.xml" value="0.25555555555555554" />
+        <entry key="app/src/main/res/xml/fileprovider.xml" value="0.638974358974359" />
       </map>
     </option>
   </component>

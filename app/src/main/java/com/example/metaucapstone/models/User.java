@@ -6,6 +6,8 @@ import java.util.List;
 public class User {
 
     private String name;
+    private String description;
+    private String imageUrl;
     private List<User> following;
     private List<String> saved;
 

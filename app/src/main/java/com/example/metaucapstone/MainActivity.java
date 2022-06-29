@@ -68,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 finish();
                 break;
+            case R.id.btnSettings:
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }
@@ -84,6 +86,9 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.action_friends:
                     fragment = new SearchFragment();
+                    break;
+                case R.id.action_profile:
+                    fragment = new ProfileFragment();
                     break;
                 default: break;
             }

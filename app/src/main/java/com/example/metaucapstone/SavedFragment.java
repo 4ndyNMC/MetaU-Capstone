@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -20,7 +21,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class SavedFragment extends SearchResultFragment {
 
@@ -49,9 +49,21 @@ public class SavedFragment extends SearchResultFragment {
 
         pbSearchResults.setVisibility(View.VISIBLE);
 
+        load();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+//        adapter.recipes.clear();
+//        adapter.notifyDataSetChanged();
+//        load();
+    }
+
+    private void load() {
         FirebaseDatabase.getInstance().getReference()
-                        .child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                        .child("Recipes").addListenerForSingleValueEvent(new ValueEventListener() {
+                .child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child("Recipes").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (!snapshot.hasChildren()) {
