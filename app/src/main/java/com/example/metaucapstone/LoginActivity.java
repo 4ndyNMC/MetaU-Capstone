@@ -62,7 +62,6 @@ public class LoginActivity extends AppCompatActivity {
 
         btnLogin.setOnClickListener(btnLoginClicked);
         btnSignup.setOnClickListener(btnSignupClicked);
-
     }
 
     private View.OnClickListener btnLoginClicked = new View.OnClickListener() {

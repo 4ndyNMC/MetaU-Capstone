@@ -66,7 +66,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
                     Intent intent = new Intent(context, RecipeInformationActivity.class);
                     intent.putExtra("recipe", Parcels.wrap(recipe));
                     context.startActivity(intent);
-                    // send the recipe object to the recipe info page
                 }
             });
         }

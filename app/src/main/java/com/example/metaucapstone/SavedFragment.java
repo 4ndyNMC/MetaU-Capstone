@@ -8,10 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.metaucapstone.models.Recipe;
@@ -90,7 +87,6 @@ public class SavedFragment extends SearchResultFragment {
                                     Recipe recipeFromDb = snapshot.getValue(Recipe.class);
                                     adapter.recipes.add(recipeFromDb);
                                     adapter.notifyDataSetChanged();
-                                    Log.i(TAG, recipeFromDb.getName() + " added.");
                                 }
 
                                 @Override

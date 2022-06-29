@@ -71,23 +71,9 @@ public class RecipeInformationActivity extends AppCompatActivity {
         pbRecipeInfo.setVisibility(ProgressBar.VISIBLE);
         Spoonacular.GetRecipeInfo(recipe, this);
 
-        DatabaseReference recipeUsersRef = FirebaseDatabase.getInstance().getReference()
-                        .child("Recipes").child(recipe.getId()).child("Users");
-        recipeUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.hasChild(FirebaseAuth.getInstance().getCurrentUser().getUid())){
-                    saved = true;
-                    fabSave.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_close_24));
-                }
-                else {
-                    saved = false;
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) { }
-        });
+        FirebaseDatabase.getInstance().getReference()
+                .child("Recipes").child(recipe.getId()).child("Users")
+                .addListenerForSingleValueEvent(checkIfSaved);
 
         fabSave.setVisibility(View.GONE);
         fabSave.setOnClickListener(fabSaveClicked);
@@ -98,6 +84,24 @@ public class RecipeInformationActivity extends AppCompatActivity {
         public void onClick(View v) {
             if (saved) unsaveRecipe();
             else saveRecipe();
+        }
+    };
+
+    private ValueEventListener checkIfSaved = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot snapshot) {
+            if (snapshot.hasChild(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+                saved = true;
+                fabSave.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_close_24));
+            }
+            else {
+                saved = false;
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) {
+
         }
     };
 

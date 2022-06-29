@@ -26,14 +26,13 @@ import java.util.Map;
 public class Spoonacular {
 
     public static String TAG = "SPOONACULAR";
+    public static String RECIPE_INFO_URL = "https://api.spoonacular.com/recipes/";
     public static String API_KEY;
     public static String COMPLEX_SEARCH_URL;
-    public static String RECIPE_INFO_URL;
 
     public Spoonacular(Context context) {
         API_KEY = context.getString(R.string.SPOONACULAR_API_KEY);
         COMPLEX_SEARCH_URL = "https://api.spoonacular.com/recipes/complexSearch/?apiKey=" + API_KEY;
-        RECIPE_INFO_URL = "https://api.spoonacular.com/recipes/";
     }
 
     public static void SearchRecipes(Fragment searchResultFragment, Map<String, String> args) throws IOException {
