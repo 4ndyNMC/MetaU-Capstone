@@ -79,4 +79,25 @@
         app:layout_constraintStart_toEndOf="@id/btnGallery"
         app:layout_constraintTop_toBottomOf="@id/ivSettingsProfilePic"/>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/fabSettingsSave"
+        android:src="@drawable/ic_baseline_sticky_note_2_24"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/purple_700"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/pbSettings"
+        android:layout_margin="64dp"
+        style="?android:attr/progressBarStyle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

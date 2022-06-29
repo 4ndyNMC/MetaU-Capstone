@@ -6,8 +6,8 @@ import java.util.List;
 public class User {
 
     private String name;
-    private String description;
-    private String imageUrl;
+    private String displayName;
+    private String bio;
     private List<User> following;
     private List<String> saved;
 
@@ -36,6 +36,22 @@ public class User {
             saved = new ArrayList<>();
         }
         saved.add(recipe.getId());
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 
     public void removeRecipe(Recipe recipe) {

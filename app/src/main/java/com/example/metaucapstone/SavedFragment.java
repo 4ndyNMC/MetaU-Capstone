@@ -49,7 +49,7 @@ public class SavedFragment extends SearchResultFragment {
 
         pbSearchResults.setVisibility(View.VISIBLE);
 
-        load();
+//        load();
     }
 
     @Override
@@ -57,7 +57,7 @@ public class SavedFragment extends SearchResultFragment {
         super.onResume();
 //        adapter.recipes.clear();
 //        adapter.notifyDataSetChanged();
-//        load();
+        load();
     }
 
     private void load() {
