@@ -120,7 +120,6 @@ public class SettingsActivity extends AppCompatActivity {
             fabSave.setEnabled(false);
             DatabaseReference userReference = FirebaseDatabase.getInstance().getReference()
                     .child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-
             if ((!etDisplayName.getText().toString().isEmpty() || !etBio.getText().toString().isEmpty()) &&
                     !(etDisplayName.getText().toString().equals(user.getDisplayName()) &&
                             (etBio.getText().toString().equals(user.getBio())))) {
@@ -129,7 +128,10 @@ public class SettingsActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         User userFromDb = snapshot.getValue(User.class);
-                        if (!etDisplayName.getText().toString().isEmpty()) userFromDb.setDisplayName(etDisplayName.getText().toString());
+                        if (!etDisplayName.getText().toString().isEmpty()) {
+                            userFromDb.setDisplayName(etDisplayName.getText().toString());
+                            uploadUsername(etDisplayName.getText().toString());
+                        }
                         if (!etBio.getText().toString().isEmpty()) userFromDb.setBio(etBio.getText().toString());
                         userReference.child("Object").setValue(userFromDb).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
@@ -216,11 +218,18 @@ public class SettingsActivity extends AppCompatActivity {
                 });
     }
 
+//    // TODO: set up hints for username
 //    private setUpHints() {
 //        if (user.getDisplayName() == null) {
 //            etDisplayName.setHint();
 //        }
 //    }
+
+    private void uploadUsername(String username) {
+        FirebaseDatabase.getInstance().getReference()
+                .child("Usernames").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .setValue(username);
+    }
 
     private void uploadImage(DatabaseReference userReference) {
         if (imageUri != null) {

@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                     fragment = new SearchFragment(fragmentManager);
                     break;
                 case R.id.action_friends:
-                    fragment = new SearchFragment();
+                    fragment = new FriendsFragment(fragmentManager);
                     break;
                 case R.id.action_profile:
                     fragment = new ProfileFragment();

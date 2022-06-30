@@ -50,11 +50,17 @@ public class ProfileFragment extends Fragment {
         tvBio = view.findViewById(R.id.tvProfileBio);
         ivProfilePic = view.findViewById(R.id.ivProfile);
 
-        pbProfile.setVisibility(View.VISIBLE);
+        setViews();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         setViews();
     }
 
     private void setViews() {
+        pbProfile.setVisibility(View.VISIBLE);
         FirebaseDatabase.getInstance().getReference()
                 .child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
