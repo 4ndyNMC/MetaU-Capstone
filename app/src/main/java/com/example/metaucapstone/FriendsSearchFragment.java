@@ -60,7 +60,6 @@ public class FriendsSearchFragment extends Fragment {
     AdapterView.OnItemClickListener dropdownClicked = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Log.i(TAG, "clicked");
             String uid = usernames.get(parent.getAdapter().getItem(position));
             Fragment fragment = new ProfileFragment(uid);
             getParentFragmentManager().beginTransaction().replace(R.id.flContainer, fragment).commit();

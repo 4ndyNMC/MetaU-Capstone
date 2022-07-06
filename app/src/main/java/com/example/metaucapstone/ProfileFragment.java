@@ -61,7 +61,6 @@ public class ProfileFragment extends Fragment {
         tvDisplayName = view.findViewById(R.id.tvProfileDisplayName);
         tvBio = view.findViewById(R.id.tvProfileBio);
         ivProfilePic = view.findViewById(R.id.ivProfile);
-
         setViews();
     }
 
@@ -78,6 +77,7 @@ public class ProfileFragment extends Fragment {
         } else {
             key = uid;
         }
+        imm.hideSoftInputFromWindow(this.getView().getWindowToken(), 0);
         pbProfile.setVisibility(View.VISIBLE);
         FirebaseDatabase.getInstance().getReference()
                 .child("Users").child(key)
