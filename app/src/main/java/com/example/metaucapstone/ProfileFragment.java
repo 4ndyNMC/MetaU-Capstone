@@ -7,10 +7,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -20,16 +22,20 @@ import com.example.metaucapstone.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class ProfileFragment extends Fragment {
+
+    public static final String TAG = "ProfileFragment";
 
     InputMethodManager imm;
     ProgressBar pbProfile;
     TextView tvDisplayName;
     TextView tvBio;
     ImageView ivProfilePic;
+    Button btnFollow;
 
     String uid;
 
@@ -61,6 +67,10 @@ public class ProfileFragment extends Fragment {
         tvDisplayName = view.findViewById(R.id.tvProfileDisplayName);
         tvBio = view.findViewById(R.id.tvProfileBio);
         ivProfilePic = view.findViewById(R.id.ivProfile);
+        btnFollow = view.findViewById(R.id.btnFollow);
+
+        btnFollow.setOnClickListener(followClicked);
+
         setViews();
     }
 
@@ -70,15 +80,35 @@ public class ProfileFragment extends Fragment {
         setViews();
     }
 
-    private void setViews() {
-        String key;
-        if (uid == null) {
-            key = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        } else {
-            key = uid;
+    private View.OnClickListener followClicked = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            String currentUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            DatabaseReference userFollowing = FirebaseDatabase.getInstance().getReference()
+                    .child("Users").child(currentUid).child("Following").child(uid);
+            DatabaseReference userFollowers = FirebaseDatabase.getInstance().getReference()
+                    .child("Users").child(uid).child("Followers").child(currentUid);
+            if (btnFollow.getText().toString().equals("Follow")) {
+                userFollowing.setValue(true);
+                userFollowers.setValue(true);
+                btnFollow.setText(R.string.unfollow);
+            }
+            else {
+                userFollowing.removeValue();
+                userFollowers.removeValue();
+                btnFollow.setText(R.string.follow);
+            }
         }
+    };
+
+    private void setViews() {
+        boolean otherProfile = uid != null;
+        String currentUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String key = otherProfile ? uid : currentUid;
+
         imm.hideSoftInputFromWindow(this.getView().getWindowToken(), 0);
         pbProfile.setVisibility(View.VISIBLE);
+        btnFollow.setVisibility(View.GONE);
         FirebaseDatabase.getInstance().getReference()
                 .child("Users").child(key)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -91,6 +121,11 @@ public class ProfileFragment extends Fragment {
                                 .load(snapshot.child("ProfilePic").getValue(String.class))
                                 .circleCrop()
                                 .into(ivProfilePic);
+                        if (otherProfile) {
+                            btnFollow.setVisibility(View.VISIBLE);
+                            if (snapshot.hasChild("Followers/" + currentUid)) btnFollow.setText(R.string.unfollow);
+                            else btnFollow.setText(R.string.follow);
+                        }
                         pbProfile.setVisibility(View.GONE);
                     }
 
