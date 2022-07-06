@@ -1,5 +1,6 @@
 package com.example.metaucapstone;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -23,12 +25,21 @@ import com.google.firebase.database.ValueEventListener;
 
 public class ProfileFragment extends Fragment {
 
+    InputMethodManager imm;
     ProgressBar pbProfile;
     TextView tvDisplayName;
     TextView tvBio;
     ImageView ivProfilePic;
 
-    public ProfileFragment() { }
+    String uid;
+
+    public ProfileFragment() {
+        uid = null;
+    }
+
+    public ProfileFragment(String uid) {
+        this.uid = uid;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,6 +56,7 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         pbProfile = view.findViewById(R.id.pbProfile);
         tvDisplayName = view.findViewById(R.id.tvProfileDisplayName);
         tvBio = view.findViewById(R.id.tvProfileBio);
@@ -60,9 +72,15 @@ public class ProfileFragment extends Fragment {
     }
 
     private void setViews() {
+        String key;
+        if (uid == null) {
+            key = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        } else {
+            key = uid;
+        }
         pbProfile.setVisibility(View.VISIBLE);
         FirebaseDatabase.getInstance().getReference()
-                .child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child("Users").child(key)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
