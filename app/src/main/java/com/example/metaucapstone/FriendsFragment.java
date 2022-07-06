@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +14,15 @@ import android.view.ViewGroup;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.List;
+
 public class FriendsFragment extends Fragment {
 
     FragmentManager fragmentManager;
+    RecyclerView rvFriends;
     FloatingActionButton fabSearch;
+
+    List<String> friends;
 
     public FriendsFragment() { }
 
@@ -39,9 +45,14 @@ public class FriendsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        rvFriends = view.findViewById(R.id.rvFriends);
         fabSearch = view.findViewById(R.id.fabSearchFriends);
 
+
+
         fabSearch.setOnClickListener(fabSearchClicked);
+
+        getFriends();
     }
 
     private View.OnClickListener fabSearchClicked = new View.OnClickListener() {
@@ -51,4 +62,8 @@ public class FriendsFragment extends Fragment {
                     new FriendsSearchFragment()).commit();
         }
     };
+
+    private void getFriends() {
+
+    }
 }

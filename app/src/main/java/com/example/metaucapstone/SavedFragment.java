@@ -47,15 +47,11 @@ public class SavedFragment extends SearchResultFragment {
         rvRecipes.setLayoutManager(new LinearLayoutManager(getContext()));
 
         pbSearchResults.setVisibility(View.VISIBLE);
-
-//        load();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-//        adapter.recipes.clear();
-//        adapter.notifyDataSetChanged();
         load();
     }
 
