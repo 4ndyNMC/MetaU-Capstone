@@ -93,7 +93,7 @@ public class SavedFragment extends SearchResultFragment {
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     Recipe recipeFromDb = snapshot.getValue(Recipe.class);
                                     adapter.recipes.add(recipeFromDb);
-                                    adapter.notifyDataSetChanged();
+                                    adapter.notifyItemInserted(adapter.recipes.size() - 1);
                                 }
 
                                 @Override

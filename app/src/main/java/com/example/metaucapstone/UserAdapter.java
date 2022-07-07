@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.metaucapstone.models.Recipe;
 
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     Context context;
     List<Map<String, String>> users;
+
+    public UserAdapter(Context context, List<Map<String, String>> users) {
+        this.context = context;
+        this.users = users;
+    }
 
     @NonNull
     @Override
@@ -35,7 +41,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return 0;
+        return users.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
