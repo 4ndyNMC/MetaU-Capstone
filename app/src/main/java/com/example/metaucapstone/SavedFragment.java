@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -80,11 +81,13 @@ public class SavedFragment extends SearchResultFragment {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (!snapshot.hasChildren()) {
-                                tvNoResults.setVisibility(View.VISIBLE);
+                            Log.i(TAG, "NO RESULTS");
+                            tvNoResults.setVisibility(View.VISIBLE);
                             pbSearchResults.setVisibility(View.GONE);
                         }
                         else {
-                            queryData(SavedFragment.this);
+                            Log.i(TAG, snapshot.getChildrenCount() + " children");
+                            queryData(SavedFragment.this, key);
                         }
                     }
 
@@ -93,18 +96,20 @@ public class SavedFragment extends SearchResultFragment {
                 });
     }
 
-    private void queryData(Fragment fragment) {
-        String currentUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    private void queryData(Fragment fragment, String key) {
         DatabaseReference savedReference = FirebaseDatabase.getInstance().getReference()
-                .child("Users").child(currentUid).child("Recipes");
+                .child("Users").child(key).child("Recipes");
         DatabaseReference recipeReference = FirebaseDatabase.getInstance().getReference()
                 .child("Recipes");
+        Log.i(TAG, "calling query");
         savedReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.i(TAG, "query called");
                 RecyclerView rvRecipes = fragment.getView().findViewById(R.id.rvRecipes);
                 RecipeAdapter adapter = (RecipeAdapter) rvRecipes.getAdapter();
                 for (DataSnapshot recipeSnapshot : snapshot.getChildren()) {
+                    Log.i(TAG, recipeSnapshot.getKey());
                     recipeReference.child(recipeSnapshot.getKey()).child("Object")
                             .addValueEventListener(new ValueEventListener() {
                                 @Override
