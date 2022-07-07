@@ -36,6 +36,7 @@ public class ProfileFragment extends Fragment {
     TextView tvBio;
     ImageView ivProfilePic;
     Button btnFollow;
+    Button btnSaved;
 
     String uid;
 
@@ -68,6 +69,7 @@ public class ProfileFragment extends Fragment {
         tvBio = view.findViewById(R.id.tvProfileBio);
         ivProfilePic = view.findViewById(R.id.ivProfile);
         btnFollow = view.findViewById(R.id.btnFollow);
+        btnSaved = view.findViewById(R.id.btnSaved);
 
         btnFollow.setOnClickListener(followClicked);
 
@@ -101,6 +103,13 @@ public class ProfileFragment extends Fragment {
         }
     };
 
+    private View.OnClickListener savedClicked = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            
+        }
+    };
+
     private void setViews() {
         boolean otherProfile = uid != null;
         String currentUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -109,6 +118,8 @@ public class ProfileFragment extends Fragment {
         imm.hideSoftInputFromWindow(this.getView().getWindowToken(), 0);
         pbProfile.setVisibility(View.VISIBLE);
         btnFollow.setVisibility(View.GONE);
+        btnSaved.setVisibility(View.GONE);
+
         FirebaseDatabase.getInstance().getReference()
                 .child("Users").child(key)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -123,6 +134,7 @@ public class ProfileFragment extends Fragment {
                                 .into(ivProfilePic);
                         if (otherProfile) {
                             btnFollow.setVisibility(View.VISIBLE);
+                            btnSaved.setVisibility(View.VISIBLE);
                             if (snapshot.hasChild("Followers/" + currentUid)) btnFollow.setText(R.string.unfollow);
                             else btnFollow.setText(R.string.follow);
                         }

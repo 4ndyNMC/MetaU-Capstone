@@ -74,7 +74,7 @@ public class FriendsFragment extends Fragment {
         getFriends();
     }
 
-    private View.OnClickListener fabSearchClicked = new View.OnClickListener() {
+    private final View.OnClickListener fabSearchClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             fragmentManager.beginTransaction().replace(R.id.flContainer,
@@ -90,10 +90,8 @@ public class FriendsFragment extends Fragment {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Log.i(TAG, "creating adapter");
                         UserAdapter adapter = (UserAdapter) rvFriends.getAdapter();
                         for (DataSnapshot friend : snapshot.getChildren()) {
-                            Log.i(TAG, friend.getKey());
                             userReference.child(friend.getKey())
                                     .addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
