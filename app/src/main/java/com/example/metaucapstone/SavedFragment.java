@@ -80,7 +80,7 @@ public class SavedFragment extends SearchResultFragment {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (!snapshot.hasChildren()) {
-                            tvNoResults.setVisibility(View.VISIBLE);
+                                tvNoResults.setVisibility(View.VISIBLE);
                             pbSearchResults.setVisibility(View.GONE);
                         }
                         else {

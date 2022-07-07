@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,6 +35,7 @@ public class FriendsFragment extends Fragment {
 
     FragmentManager fragmentManager;
     RecyclerView rvFriends;
+    TextView tvNoFriends;
     FloatingActionButton fabSearch;
     ProgressBar pbFriends;
 
@@ -61,8 +63,11 @@ public class FriendsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         rvFriends = view.findViewById(R.id.rvFriends);
+        tvNoFriends = view.findViewById(R.id.tvNoFriends);
         fabSearch = view.findViewById(R.id.fabSearchFriends);
         pbFriends = view.findViewById(R.id.pbFriends);
+
+        tvNoFriends.setVisibility(View.GONE);
 
         friends = new ArrayList<>();
         UserAdapter adapter = new UserAdapter(fragmentManager, getContext(), friends);
@@ -91,6 +96,11 @@ public class FriendsFragment extends Fragment {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         UserAdapter adapter = (UserAdapter) rvFriends.getAdapter();
+                        if (!snapshot.hasChildren()) {
+                            tvNoFriends.setVisibility(View.VISIBLE);
+                            pbFriends.setVisibility(View.GONE);
+                            return;
+                        }
                         for (DataSnapshot friend : snapshot.getChildren()) {
                             userReference.child(friend.getKey())
                                     .addListenerForSingleValueEvent(new ValueEventListener() {

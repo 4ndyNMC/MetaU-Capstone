@@ -14,7 +14,7 @@
     <string name="cuisine">Cuisine:</string>
     <string name="results">Results</string>
     <string name="no_results">Sorry, there were no search results ):</string>
-    <string name="no_saved">You don\'t have any recipes saved!</string>
+    <string name="no_saved">No recipes saved yet!</string>
     <string name="error_email_in_use">That email is already in use</string>
     <string name="error_incorrect_password">That password is incorrect</string>
     <string name="error_snackbar">Sorry, there was an error</string>
@@ -26,4 +26,5 @@
     <string name="settings_profile_pic">Profile Pic:</string>
     <string name="follow">Follow</string>
     <string name="unfollow">Unfollow</string>
+    <string name="no_friends">No friends, go make some!</string>
 </resources>
