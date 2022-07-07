@@ -27,6 +27,18 @@ public class SavedFragment extends SearchResultFragment {
 
     TextView tvResults;
 
+    String uid;
+
+    public SavedFragment() {
+        super();
+        this.uid = null;
+    }
+
+    public SavedFragment(String uid) {
+        super();
+        this.uid = uid;
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -45,20 +57,26 @@ public class SavedFragment extends SearchResultFragment {
         adapter = new RecipeAdapter(getContext(), recipes);
         rvRecipes.setAdapter(adapter);
         rvRecipes.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        pbSearchResults.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        adapter.recipes.clear();
+        adapter.notifyDataSetChanged();
         load();
     }
 
     private void load() {
+        boolean otherProfile = uid != null;
+        String currentUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String key = otherProfile ? uid : currentUid;
+
+        pbSearchResults.setVisibility(View.VISIBLE);
+
         FirebaseDatabase.getInstance().getReference()
-                .child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .child("Recipes").addListenerForSingleValueEvent(new ValueEventListener() {
+                .child("Users").child(key).child("Recipes")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (!snapshot.hasChildren()) {
@@ -76,9 +94,9 @@ public class SavedFragment extends SearchResultFragment {
     }
 
     private void queryData(Fragment fragment) {
+        String currentUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference savedReference = FirebaseDatabase.getInstance().getReference()
-                .child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .child("Recipes");
+                .child("Users").child(currentUid).child("Recipes");
         DatabaseReference recipeReference = FirebaseDatabase.getInstance().getReference()
                 .child("Recipes");
         savedReference.addListenerForSingleValueEvent(new ValueEventListener() {

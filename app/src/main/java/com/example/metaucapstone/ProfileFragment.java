@@ -72,6 +72,7 @@ public class ProfileFragment extends Fragment {
         btnSaved = view.findViewById(R.id.btnSaved);
 
         btnFollow.setOnClickListener(followClicked);
+        btnSaved.setOnClickListener(savedClicked);
 
         setViews();
     }
@@ -82,7 +83,7 @@ public class ProfileFragment extends Fragment {
         setViews();
     }
 
-    private View.OnClickListener followClicked = new View.OnClickListener() {
+    private final View.OnClickListener followClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             String currentUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -103,10 +104,11 @@ public class ProfileFragment extends Fragment {
         }
     };
 
-    private View.OnClickListener savedClicked = new View.OnClickListener() {
+    private final View.OnClickListener savedClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            
+            Fragment fragment = new SavedFragment(uid);
+            getParentFragmentManager().beginTransaction().replace(R.id.flContainer, fragment).commit();
         }
     };
 
