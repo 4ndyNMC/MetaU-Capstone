@@ -8,6 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -18,10 +20,12 @@ import java.util.Map;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
+    FragmentManager fragmentManager;
     Context context;
     List<Map<String, String>> users;
 
-    public UserAdapter(Context context, List<Map<String, String>> users) {
+    public UserAdapter(FragmentManager fragmentManager, Context context, List<Map<String, String>> users) {
+        this.fragmentManager = fragmentManager;
         this.context = context;
         this.users = users;
     }
@@ -46,6 +50,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
+        String uid;
         TextView tvUsername;
         ImageView ivPic;
 
@@ -61,11 +66,22 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         }
 
         public void bind(Map<String, String> user) {
+            uid = user.get("uid");
             tvUsername.setText(user.get("username"));
             Glide.with(context)
                     .load(user.get("imageUrl"))
                     .circleCrop()
                     .into(ivPic);
+            tvUsername.setOnClickListener(toProfile);
+            ivPic.setOnClickListener(toProfile);
         }
+
+        private View.OnClickListener toProfile = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = new ProfileFragment(uid);
+                fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
+            }
+        };
     }
 }

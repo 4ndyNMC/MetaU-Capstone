@@ -65,7 +65,7 @@ public class FriendsFragment extends Fragment {
         pbFriends = view.findViewById(R.id.pbFriends);
 
         friends = new ArrayList<>();
-        UserAdapter adapter = new UserAdapter(getContext(), friends);
+        UserAdapter adapter = new UserAdapter(fragmentManager, getContext(), friends);
         rvFriends.setAdapter(adapter);
         rvFriends.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -99,6 +99,7 @@ public class FriendsFragment extends Fragment {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     Map<String, String> friendMap = new HashMap<String, String>() {{
+                                        put("uid", snapshot.getKey());
                                         put("username", snapshot.child("Object/displayName")
                                                 .getValue(String.class));
                                         put("imageUrl", snapshot.child("ProfilePic")
