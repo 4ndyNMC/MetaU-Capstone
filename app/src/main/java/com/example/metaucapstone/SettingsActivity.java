@@ -3,6 +3,7 @@ package com.example.metaucapstone;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.FileProvider;
 
 import android.content.ContentResolver;
@@ -27,6 +28,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -48,6 +50,7 @@ public class SettingsActivity extends AppCompatActivity {
     public static final int RESULT_LOAD_IMAGE = 42;
     public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 52;
 
+    ConstraintLayout clSettings;
     EditText etDisplayName;
     EditText etBio;
     FloatingActionButton fabSave;
@@ -66,6 +69,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        clSettings = findViewById(R.id.clSettings);
         etDisplayName = findViewById(R.id.etDisplayName);
         etBio = findViewById(R.id.etBio);
         fabSave = findViewById(R.id.fabSettingsSave);
@@ -108,6 +112,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
                 Log.i(TAG, "image not selected");
         } else {
+            Snackbar.make(clSettings, "Something went wrong", Snackbar.LENGTH_LONG);
             Log.i(TAG, "something went wrong");
         }
     }

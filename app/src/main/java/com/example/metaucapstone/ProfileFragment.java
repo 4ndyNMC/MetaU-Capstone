@@ -72,6 +72,7 @@ public class ProfileFragment extends Fragment {
         btnFollow = view.findViewById(R.id.btnFollow);
         btnSaved = view.findViewById(R.id.btnSaved);
 
+        // TODO added onCancelled
         btnFollow.setOnClickListener(followClicked);
         btnSaved.setOnClickListener(savedClicked);
 
