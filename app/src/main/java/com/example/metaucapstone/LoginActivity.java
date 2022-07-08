@@ -33,6 +33,7 @@ import java.util.regex.Pattern;
 public class LoginActivity extends AppCompatActivity {
 
     public static final String TAG = "LoginActivity";
+    public static final String DEFAULT_PROFILE_PIC = "https://firebasestorage.googleapis.com/v0/b/metau-capstone-145a4.appspot.com/o/ProfilePics%2F34AD2.jpeg?alt=media&token=ef7bea72-5852-44b3-b757-60dfd3989bd4";
     public static final int MIN_PASSWORD_LENGTH = 6;
 
     private InputMethodManager imm;
@@ -134,9 +135,17 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void storeUser(User user) {
+        String email = etUsername.getText().toString();
+        String displayName = email.substring(0, email.indexOf("@"));
+        user.setDisplayName(displayName);
+        user.setBio(getString(R.string.new_user_bio));
+        FirebaseDatabase.getInstance().getReference()
+                .child("Usernames").child(auth.getCurrentUser().getUid())
+                .setValue(displayName);
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
-                .child("Users").child(auth.getCurrentUser().getUid()).child("Object");
-        reference.setValue(user);
+                .child("Users").child(auth.getCurrentUser().getUid());
+        reference.child("Object").setValue(user);
+        reference.child("ProfilePic").setValue(DEFAULT_PROFILE_PIC);
     }
 
 

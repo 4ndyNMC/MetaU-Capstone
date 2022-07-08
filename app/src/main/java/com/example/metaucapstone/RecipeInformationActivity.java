@@ -79,6 +79,25 @@ public class RecipeInformationActivity extends AppCompatActivity {
         fabSave.setOnClickListener(fabSaveClicked);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_top, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.btnLogout:
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(RecipeInformationActivity.this,
+                        LoginActivity.class));
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private View.OnClickListener fabSaveClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -183,24 +202,5 @@ public class RecipeInformationActivity extends AppCompatActivity {
                 .into(ivRecipeInfo);
         pbRecipeInfo.setVisibility(ProgressBar.GONE);
         fabSave.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_top, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.btnLogout:
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(RecipeInformationActivity.this,
-                        LoginActivity.class));
-                finish();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

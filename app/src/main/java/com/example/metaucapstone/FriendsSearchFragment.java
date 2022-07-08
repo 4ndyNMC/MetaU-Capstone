@@ -1,20 +1,21 @@
 package com.example.metaucapstone;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -49,10 +50,21 @@ public class FriendsSearchFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         etSearch = view.findViewById(R.id.etFriendSearch);
+
         etSearch.setEnabled(false);
+        etSearch.setOnItemClickListener(dropdownClicked);
 
         getUsernames();
     }
+
+    AdapterView.OnItemClickListener dropdownClicked = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            String uid = usernames.get(parent.getAdapter().getItem(position));
+            Fragment fragment = new ProfileFragment(uid);
+            getParentFragmentManager().beginTransaction().replace(R.id.flContainer, fragment).commit();
+        }
+    };
 
     private void getUsernames() {
         FirebaseDatabase.getInstance().getReference().child("Usernames")

@@ -28,6 +28,18 @@ public class SavedFragment extends SearchResultFragment {
 
     TextView tvResults;
 
+    String uid;
+
+    public SavedFragment() {
+        super();
+        this.uid = null;
+    }
+
+    public SavedFragment(String uid) {
+        super();
+        this.uid = uid;
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -46,32 +58,36 @@ public class SavedFragment extends SearchResultFragment {
         adapter = new RecipeAdapter(getContext(), recipes);
         rvRecipes.setAdapter(adapter);
         rvRecipes.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        pbSearchResults.setVisibility(View.VISIBLE);
-
-//        load();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-//        adapter.recipes.clear();
-//        adapter.notifyDataSetChanged();
+        adapter.recipes.clear();
+        adapter.notifyDataSetChanged();
         load();
     }
 
     private void load() {
+        boolean otherProfile = uid != null;
+        String currentUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String key = otherProfile ? uid : currentUid;
+
+        pbSearchResults.setVisibility(View.VISIBLE);
+
         FirebaseDatabase.getInstance().getReference()
-                .child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .child("Recipes").addListenerForSingleValueEvent(new ValueEventListener() {
+                .child("Users").child(key).child("Recipes")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (!snapshot.hasChildren()) {
+                            Log.i(TAG, "NO RESULTS");
                             tvNoResults.setVisibility(View.VISIBLE);
                             pbSearchResults.setVisibility(View.GONE);
                         }
                         else {
-                            queryData(SavedFragment.this);
+                            Log.i(TAG, snapshot.getChildrenCount() + " children");
+                            queryData(SavedFragment.this, key);
                         }
                     }
 
@@ -80,25 +96,27 @@ public class SavedFragment extends SearchResultFragment {
                 });
     }
 
-    private void queryData(Fragment fragment) {
+    private void queryData(Fragment fragment, String key) {
         DatabaseReference savedReference = FirebaseDatabase.getInstance().getReference()
-                .child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .child("Recipes");
+                .child("Users").child(key).child("Recipes");
         DatabaseReference recipeReference = FirebaseDatabase.getInstance().getReference()
                 .child("Recipes");
+        Log.i(TAG, "calling query");
         savedReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.i(TAG, "query called");
                 RecyclerView rvRecipes = fragment.getView().findViewById(R.id.rvRecipes);
                 RecipeAdapter adapter = (RecipeAdapter) rvRecipes.getAdapter();
                 for (DataSnapshot recipeSnapshot : snapshot.getChildren()) {
+                    Log.i(TAG, recipeSnapshot.getKey());
                     recipeReference.child(recipeSnapshot.getKey()).child("Object")
                             .addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     Recipe recipeFromDb = snapshot.getValue(Recipe.class);
                                     adapter.recipes.add(recipeFromDb);
-                                    adapter.notifyDataSetChanged();
+                                    adapter.notifyItemInserted(adapter.recipes.size() - 1);
                                 }
 
                                 @Override
