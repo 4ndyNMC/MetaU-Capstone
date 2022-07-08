@@ -39,6 +39,7 @@ public class ProfileFragment extends Fragment {
     Button btnSaved;
 
     String uid;
+    boolean following;
 
     public ProfileFragment() {
         uid = null;
@@ -91,12 +92,14 @@ public class ProfileFragment extends Fragment {
                     .child("Users").child(currentUid).child("Following").child(uid);
             DatabaseReference userFollowers = FirebaseDatabase.getInstance().getReference()
                     .child("Users").child(uid).child("Followers").child(currentUid);
-            if (btnFollow.getText().toString().equals("Follow")) {
+            if (following) {
+                following = false;
                 userFollowing.setValue(true);
                 userFollowers.setValue(true);
                 btnFollow.setText(R.string.unfollow);
             }
             else {
+                following = true;
                 userFollowing.removeValue();
                 userFollowers.removeValue();
                 btnFollow.setText(R.string.follow);
@@ -137,8 +140,13 @@ public class ProfileFragment extends Fragment {
                         if (otherProfile) {
                             btnFollow.setVisibility(View.VISIBLE);
                             btnSaved.setVisibility(View.VISIBLE);
-                            if (snapshot.hasChild("Followers/" + currentUid)) btnFollow.setText(R.string.unfollow);
-                            else btnFollow.setText(R.string.follow);
+                            if (snapshot.hasChild("Followers/" + currentUid)) {
+                                following = false;
+                                btnFollow.setText(R.string.unfollow);
+                            } else {
+                                following = true;
+                                btnFollow.setText(R.string.follow);
+                            }
                         }
                         pbProfile.setVisibility(View.GONE);
                     }
