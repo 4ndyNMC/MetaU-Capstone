@@ -43,7 +43,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put("uid", uid);
         contentValues.put("username", username);
-        if (hasUid(uid)) return false;
+        if (hasUid(uid)) return updateUsername(uid, username);
 
         long result = db.insert("usernames", null, contentValues);
         return result != -1;
