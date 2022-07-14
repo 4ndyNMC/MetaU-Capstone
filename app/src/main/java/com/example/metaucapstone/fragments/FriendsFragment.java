@@ -70,7 +70,7 @@ public class FriendsFragment extends Fragment {
         tvNoFriends.setVisibility(View.GONE);
 
         friends = new ArrayList<>();
-        UserAdapter adapter = new UserAdapter(fragmentManager, getContext(), friends);
+        com.example.metaucapstone.UserAdapter adapter = new com.example.metaucapstone.UserAdapter(fragmentManager, getContext(), friends);
         rvFriends.setAdapter(adapter);
         rvFriends.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -83,7 +83,7 @@ public class FriendsFragment extends Fragment {
         @Override
         public void onClick(View v) {
             fragmentManager.beginTransaction().replace(R.id.flContainer,
-                    new FriendsSearchFragment()).commit();
+                    new com.example.metaucapstone.FriendsSearchFragment()).commit();
         }
     };
 
@@ -95,7 +95,7 @@ public class FriendsFragment extends Fragment {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        UserAdapter adapter = (UserAdapter) rvFriends.getAdapter();
+                        com.example.metaucapstone.UserAdapter adapter = (com.example.metaucapstone.UserAdapter) rvFriends.getAdapter();
                         if (!snapshot.hasChildren()) {
                             tvNoFriends.setVisibility(View.VISIBLE);
                             pbFriends.setVisibility(View.GONE);
