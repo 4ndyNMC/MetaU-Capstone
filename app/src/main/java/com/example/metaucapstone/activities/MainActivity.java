@@ -65,11 +65,11 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.btnLogout:
                 FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                startActivity(new Intent(MainActivity.this, com.example.metaucapstone.LoginActivity.class));
                 finish();
                 break;
             case R.id.btnSettings:
-                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                startActivity(new Intent(MainActivity.this, com.example.metaucapstone.SettingsActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }
@@ -79,16 +79,16 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_saved:
-                    fragment = new SavedFragment();
+                    fragment = new com.example.metaucapstone.SavedFragment();
                     break;
                 case R.id.action_search:
-                    fragment = new SearchFragment(fragmentManager);
+                    fragment = new com.example.metaucapstone.SearchFragment(fragmentManager);
                     break;
                 case R.id.action_friends:
-                    fragment = new FriendsFragment(fragmentManager);
+                    fragment = new com.example.metaucapstone.FriendsFragment(fragmentManager);
                     break;
                 case R.id.action_profile:
-                    fragment = new ProfileFragment();
+                    fragment = new com.example.metaucapstone.ProfileFragment();
                     break;
                 default: break;
             }

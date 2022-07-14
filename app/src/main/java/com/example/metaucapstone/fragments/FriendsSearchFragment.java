@@ -1,7 +1,5 @@
 package com.example.metaucapstone;
 
-import android.app.Activity;
-import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 
@@ -13,14 +11,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import com.example.metaucapstone.MainActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -122,14 +117,14 @@ public class FriendsSearchFragment extends Fragment {
 
     private void getUsernamesFromDb() {
         Log.i(TAG, "pulling usernames from db");
-        Cursor result = db.getData();
+        Cursor result = db.getUsernameData();
         usernames = new HashMap<>();
 
         while (result.moveToNext()) {
             usernames.put(result.getString(1), result.getString(0));
             Log.i(TAG, "added " + result.getString(0));
         }
-        ((MainActivity) getContext()).runOnUiThread(() -> {
+        ((com.example.metaucapstone.MainActivity) getContext()).runOnUiThread(() -> {
             String[] names = new String[usernames.size()];
             usernames.keySet().toArray(names);
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
