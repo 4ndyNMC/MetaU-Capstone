@@ -165,7 +165,6 @@ public class FriendsFragment extends Fragment {
     private void getFriendsFromDb() {
         Log.i(TAG, "pulling usernames from db");
         Cursor result = db.getFriendsData();
-
         ((com.example.metaucapstone.MainActivity) getContext()).runOnUiThread(() -> {
             while (result.moveToNext()) {
                 adapter.users.add(new HashMap<String, String>() {{
@@ -180,20 +179,9 @@ public class FriendsFragment extends Fragment {
                         Log.e(TAG, e.toString());
                     }
                 }});
-                Log.i(TAG, "added " + result.getString(0));
                 adapter.notifyItemInserted(adapter.users.size() - 1);
                 pbFriends.setVisibility(View.GONE);
             }
         });
-
-//        ((com.example.metaucapstone.MainActivity) getContext()).runOnUiThread(() -> {
-//            String[] names = new String[usernames.size()];
-//            usernames.keySet().toArray(names);
-//            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
-//                    R.layout.searchtextview, names);
-//            etSearch.setAdapter(adapter);
-//            etSearch.setEnabled(true);
-//            pbFriendsSearch.setVisibility(View.GONE);
-//        });
     }
 }
