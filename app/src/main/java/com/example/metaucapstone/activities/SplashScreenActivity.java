@@ -34,7 +34,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         db = new DatabaseHelper(this);
 
         parent = FirebaseDatabase.getInstance().getReference();
-//        parent.child("Usernames").addListenerForSingleValueEvent(getUsernames);
+        parent.child("Usernames").addListenerForSingleValueEvent(getUsernames);
         parent.child("Users").addListenerForSingleValueEvent(getFriends);
         finish();
     }
