@@ -38,6 +38,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private void initDb(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS friends (uid TEXT PRIMARY KEY, profilePicUrl TEXT, object BLOB)");
         db.execSQL("CREATE TABLE IF NOT EXISTS usernames (uid TEXT PRIMARY KEY, username TEXT)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS images (image BLOB)");
     }
 
     public boolean hasUsername(String username) {
