@@ -5,12 +5,16 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.example.metaucapstone.models.User;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -38,7 +42,51 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private void initDb(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS friends (uid TEXT PRIMARY KEY, profilePicUrl TEXT, object BLOB)");
         db.execSQL("CREATE TABLE IF NOT EXISTS usernames (uid TEXT PRIMARY KEY, username TEXT)");
-        db.execSQL("CREATE TABLE IF NOT EXISTS images (image BLOB)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS images (id TEXT PRIMARY KEY, image BLOB)");
+    }
+
+    public boolean pfpStored() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM images WHERE id = ?", new String[] {"default"});
+        boolean hasValue = cursor.getCount() > 0;
+        cursor.close();
+        return hasValue;
+    }
+
+    // TODO: abstract serialization
+    public boolean storePfp(Bitmap img) throws IOException {
+        if (pfpStored()) return true;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ObjectOutputStream out;
+        try {
+            out = new ObjectOutputStream(bos);
+            CachedBitmap cachedBitmap = new CachedBitmap(img);
+            cachedBitmap.writeObject(out);
+            byte[] serializedBitmap = bos.toByteArray();
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("id", "default");
+            contentValues.put("image", serializedBitmap);
+
+            long result = db.insert("images", null, contentValues);
+            return result != -1;
+        } catch (IOException e) {
+            Log.e(TAG, "serialization error: " + e);
+            bos.close();
+        }
+        return false;
+    }
+
+    public Bitmap getDefaultPfp() throws IOException, ClassNotFoundException {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM images WHERE id = ?", new String[] {"default"});
+        cursor.moveToNext();
+        byte[] serializedImage = cursor.getBlob(1);
+        ByteArrayInputStream bis = new ByteArrayInputStream(serializedImage);
+        ObjectInputStream in = new ObjectInputStream(bis);
+        CachedBitmap cachedBitmap = new CachedBitmap(null);
+        cachedBitmap.readObject(in);
+        return cachedBitmap.bitmap;
     }
 
     public boolean hasUsername(String username) {
@@ -132,7 +180,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public boolean updateFriend(String uid, String profilePicUrl, User obj) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutputStream out = null;
+        ObjectOutputStream out;
         try {
             out = new ObjectOutputStream(bos);
             out.writeObject(obj);

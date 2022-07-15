@@ -22,9 +22,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     FragmentManager fragmentManager;
     Context context;
-    List<Map<String, String>> users;
+    List<Map<String, Object>> users;
 
-    public UserAdapter(FragmentManager fragmentManager, Context context, List<Map<String, String>> users) {
+    public UserAdapter(FragmentManager fragmentManager, Context context, List<Map<String, Object>> users) {
         this.fragmentManager = fragmentManager;
         this.context = context;
         this.users = users;
@@ -39,7 +39,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Map<String, String> user = users.get(position);
+        Map<String, Object> user = users.get(position);
         holder.bind(user);
     }
 
@@ -65,9 +65,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
         }
 
-        public void bind(Map<String, String> user) {
-            uid = user.get("uid");
-            tvUsername.setText(user.get("username"));
+        public void bind(Map<String, Object> user) {
+            uid = (String) user.get("uid");
+            tvUsername.setText((String) user.get("username"));
             Glide.with(context)
                     .load(user.get("imageUrl"))
                     .circleCrop()

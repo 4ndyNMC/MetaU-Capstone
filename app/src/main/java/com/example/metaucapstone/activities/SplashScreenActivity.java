@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.database.sqlite.SQLiteConstraintException;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,10 +19,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
     public static final String TAG = "SplashScreenActivity";
+    public static final String DEFAULT_PROFILE_PIC = "https://firebasestorage.googleapis.com/v0/b/metau-capstone-145a4.appspot.com/o/ProfilePics%2F34AD2.jpeg?alt=media&token=ef7bea72-5852-44b3-b757-60dfd3989bd4";
 
     DatabaseHelper db;
     DatabaseReference parent;
@@ -36,6 +43,11 @@ public class SplashScreenActivity extends AppCompatActivity {
         parent = FirebaseDatabase.getInstance().getReference();
         parent.child("Usernames").addListenerForSingleValueEvent(getUsernames);
         parent.child("Users").addListenerForSingleValueEvent(getFriends);
+        try {
+            storeDefaultPfp();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         finish();
     }
 
@@ -87,4 +99,19 @@ public class SplashScreenActivity extends AppCompatActivity {
         @Override
         public void onCancelled(@NonNull DatabaseError error) { }
     };
+
+    private void storeDefaultPfp() throws IOException {
+        HttpURLConnection connection = (HttpURLConnection) new URL(DEFAULT_PROFILE_PIC).openConnection();
+        Thread thread = new Thread(() -> {
+            try {
+                connection.connect();
+                InputStream in = connection.getInputStream();
+                Bitmap x = BitmapFactory.decodeStream(in);
+                db.storePfp(x);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        thread.start();
+    }
 }

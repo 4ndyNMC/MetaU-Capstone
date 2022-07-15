@@ -51,7 +51,7 @@ public class FriendsFragment extends Fragment {
     DatabaseHelper db;
     com.example.metaucapstone.UserAdapter adapter;
 
-    List<Map<String, String>> friends;
+    List<Map<String, Object>> friends;
     boolean[] gotResult = new boolean[1];
 
     public FriendsFragment() { }
@@ -115,7 +115,7 @@ public class FriendsFragment extends Fragment {
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                Map<String, String> friendMap = new HashMap<String, String>() {{
+                                Map<String, Object> friendMap = new HashMap<String, Object>() {{
                                     put("uid", snapshot.getKey());
                                     put("username", snapshot.child("Object/displayName")
                                             .getValue(String.class));
@@ -124,6 +124,7 @@ public class FriendsFragment extends Fragment {
                                 }};
                                 adapter.users.add(friendMap);
                                 adapter.notifyItemInserted(adapter.users.size() - 1);
+                                gotResult[0] = true;
                             }
 
                             @Override
@@ -140,6 +141,7 @@ public class FriendsFragment extends Fragment {
         public void onCancelled(@NonNull DatabaseError error) {
             Log.i(TAG, error.toString());
             pbFriends.setVisibility(View.GONE);
+            gotResult[0] = true;
         }
     };
 
@@ -167,14 +169,14 @@ public class FriendsFragment extends Fragment {
         Cursor result = db.getFriendsData();
         ((com.example.metaucapstone.MainActivity) getContext()).runOnUiThread(() -> {
             while (result.moveToNext()) {
-                adapter.users.add(new HashMap<String, String>() {{
+                adapter.users.add(new HashMap<String, Object>() {{
                     try {
                         byte[] serializedUser = result.getBlob(2);
                         ByteArrayInputStream bis = new ByteArrayInputStream(serializedUser);
                         ObjectInput in = new ObjectInputStream(bis);
                         put("username", ((User) in.readObject()).getDisplayName());
                         put("uid", result.getString(0));
-                        put("imageUrl", result.getString(1));
+                        put("imageUrl", db.getDefaultPfp());
                     } catch (IOException | ClassNotFoundException e) {
                         Log.e(TAG, e.toString());
                     }
