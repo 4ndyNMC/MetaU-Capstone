@@ -121,7 +121,7 @@ public class FriendsSearchFragment extends Fragment {
         usernames = new HashMap<>();
 
         while (result.moveToNext()) {
-            usernames.put(result.getString(1), result.getString(0));
+            usernames.put(result.getString(0), result.getString(1));
             Log.i(TAG, "added " + result.getString(0));
         }
         ((com.example.metaucapstone.MainActivity) getContext()).runOnUiThread(() -> {
