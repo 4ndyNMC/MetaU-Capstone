@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.example.metaucapstone.models.User;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,7 +43,8 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         parent = FirebaseDatabase.getInstance().getReference();
         parent.child("Usernames").addListenerForSingleValueEvent(getUsernames);
-        parent.child("Users").addListenerForSingleValueEvent(getFriends);
+        parent.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child("Following").addListenerForSingleValueEvent(getFriends);
         try {
             storeDefaultPfp();
         } catch (IOException e) {
@@ -84,7 +86,9 @@ public class SplashScreenActivity extends AppCompatActivity {
                         User friendObject = snapshot.child(friend.getKey()).child("Object").getValue(User.class);
                         Log.i(TAG, friendObject.getDisplayName());
                         try {
-                            db.insertFriend(friend.getKey(), "test.com", friendObject);
+                            db.insertFriend(friend.getKey(),
+                                    friend.child("ProfilePicUrl").getValue(String.class),
+                                    friendObject);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
