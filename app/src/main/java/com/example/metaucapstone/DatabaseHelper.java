@@ -13,7 +13,6 @@ import com.example.metaucapstone.models.User;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
@@ -24,25 +23,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public DatabaseHelper(Context context) {
         super(context, "data.db", null, DATABASE_VERSION);
-        initDb(this.getWritableDatabase());
+        initCache(this.getWritableDatabase());
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         Log.i(TAG, "DATABASE CREATED");
-        initDb(db);
+        initCache(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS usernames");
-        db.execSQL("DROP TABLE IF EXISTS friends");
+        clearCache(db);
     }
 
-    private void initDb(SQLiteDatabase db) {
+    private void initCache(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS friends (uid TEXT PRIMARY KEY, profilePicUrl TEXT, object BLOB)");
         db.execSQL("CREATE TABLE IF NOT EXISTS usernames (uid TEXT PRIMARY KEY, username TEXT)");
         db.execSQL("CREATE TABLE IF NOT EXISTS images (id TEXT PRIMARY KEY, image BLOB)");
+    }
+
+    public void clearCache(SQLiteDatabase db) {
+        db.execSQL("DROP TABLE IF EXISTS usernames");
+        db.execSQL("DROP TABLE IF EXISTS friends");
+        db.execSQL("DROP TABLE IF EXISTS images");
     }
 
     public boolean pfpStored() {
