@@ -1,13 +1,13 @@
 package com.example.metaucapstone;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,9 +26,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class ProfileFragment extends Fragment {
 
     public static final String TAG = "ProfileFragment";
+    public static final long TIMEOUT_LENGTH = 3000L;
 
     InputMethodManager imm;
     ProgressBar pbProfile;
@@ -37,9 +45,15 @@ public class ProfileFragment extends Fragment {
     ImageView ivProfilePic;
     Button btnFollow;
     Button btnSaved;
+    DatabaseHelper db;
 
+    Timer timer;
     String uid;
+    String currentUid;
+    String key;
     boolean following;
+    boolean otherProfile;
+    boolean[] gotResult = new boolean[1];
 
     public ProfileFragment() {
         uid = null;
@@ -71,18 +85,28 @@ public class ProfileFragment extends Fragment {
         ivProfilePic = view.findViewById(R.id.ivProfile);
         btnFollow = view.findViewById(R.id.btnFollow);
         btnSaved = view.findViewById(R.id.btnSaved);
+        db = new DatabaseHelper(getContext());
 
         // TODO added onCancelled
         btnFollow.setOnClickListener(followClicked);
         btnSaved.setOnClickListener(savedClicked);
 
-        setViews();
+        getUser();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        setViews();
+        getUser();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        FirebaseDatabase.getInstance().getReference()
+                .child("Users").child(key)
+                .removeEventListener(getProfileFromNetwork);
+        timer.cancel();
     }
 
     private final View.OnClickListener followClicked = new View.OnClickListener() {
@@ -116,10 +140,64 @@ public class ProfileFragment extends Fragment {
         }
     };
 
-    private void setViews() {
-        boolean otherProfile = uid != null;
-        String currentUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        String key = otherProfile ? uid : currentUid;
+    private final ValueEventListener getProfileFromNetwork = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot snapshot) {
+            gotResult[0] = true;
+            User user = snapshot.child("Object").getValue(User.class);
+            String profilePicUrl = snapshot.child("ProfilePic").getValue(String.class);
+            if (isVisible()) {
+                setViews(user, profilePicUrl);
+                if (otherProfile) {
+                    btnFollow.setVisibility(View.VISIBLE);
+                    btnSaved.setVisibility(View.VISIBLE);
+                    if (snapshot.hasChild("Followers/" + currentUid)) {
+                        following = false;
+                        btnFollow.setText(R.string.unfollow);
+                    } else {
+                        following = true;
+                        btnFollow.setText(R.string.follow);
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) { }
+    };
+
+    private void getProfileFromDb() throws IOException, ClassNotFoundException {
+        if (!db.hasFriend(key)) return;
+        Cursor profileData = db.getFriendsData(key);
+        profileData.moveToNext();
+        byte[] serializedUser = profileData.getBlob(2);
+        ByteArrayInputStream bis = new ByteArrayInputStream(serializedUser);
+        ObjectInput in = new ObjectInputStream(bis);
+        User user = (User) in.readObject();
+        ((com.example.metaucapstone.MainActivity) getContext()).runOnUiThread(() -> {
+            try {
+                setViews(user, db.getDefaultPfp());
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private void setViews(User user, Object profilePic) {
+        tvDisplayName.setText(user.getDisplayName());
+        tvBio.setText(user.getBio());
+        Glide.with(ProfileFragment.this)
+                .load(profilePic)
+                .circleCrop()
+                .into(ivProfilePic);
+        pbProfile.setVisibility(View.GONE);
+    }
+
+    private void getUser() {
+        gotResult[0] = false;
+        otherProfile = uid != null;
+        currentUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        key = otherProfile ? uid : currentUid;
 
         imm.hideSoftInputFromWindow(this.getView().getWindowToken(), 0);
         pbProfile.setVisibility(View.VISIBLE);
@@ -128,32 +206,21 @@ public class ProfileFragment extends Fragment {
 
         FirebaseDatabase.getInstance().getReference()
                 .child("Users").child(key)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        User user = snapshot.child("Object").getValue(User.class);
-                        tvDisplayName.setText(user.getDisplayName());
-                        tvBio.setText(user.getBio());
-                        Glide.with(ProfileFragment.this)
-                                .load(snapshot.child("ProfilePic").getValue(String.class))
-                                .circleCrop()
-                                .into(ivProfilePic);
-                        if (otherProfile) {
-                            btnFollow.setVisibility(View.VISIBLE);
-                            btnSaved.setVisibility(View.VISIBLE);
-                            if (snapshot.hasChild("Followers/" + currentUid)) {
-                                following = false;
-                                btnFollow.setText(R.string.unfollow);
-                            } else {
-                                following = true;
-                                btnFollow.setText(R.string.follow);
-                            }
-                        }
-                        pbProfile.setVisibility(View.GONE);
+                .addListenerForSingleValueEvent(getProfileFromNetwork);
+        timer = new Timer();
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                timer.cancel();
+                if (!gotResult[0]) {
+                    try {
+                        getProfileFromDb();
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
                     }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) { }
-                });
+                }
+            }
+        };
+        timer.schedule(timerTask, TIMEOUT_LENGTH);
     }
 }

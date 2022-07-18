@@ -207,4 +207,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.rawQuery("SELECT * FROM friends", null);
     }
+
+    public Cursor getFriendsData(String uid) {
+        if (!hasFriend(uid)) return null;
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.rawQuery("SELECT * FROM friends WHERE uid = ?", new String[] {uid});
+    }
 }
