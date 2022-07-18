@@ -105,6 +105,8 @@ public class FriendsFragment extends Fragment {
         @Override
         public void onDataChange(@NonNull DataSnapshot snapshot) {
             com.example.metaucapstone.UserAdapter adapter = (com.example.metaucapstone.UserAdapter) rvFriends.getAdapter();
+            adapter.users.clear();
+            adapter.notifyDataSetChanged();
             if (!snapshot.hasChildren()) {
                 tvNoFriends.setVisibility(View.VISIBLE);
                 pbFriends.setVisibility(View.GONE);
