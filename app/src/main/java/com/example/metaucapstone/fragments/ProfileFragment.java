@@ -47,10 +47,12 @@ public class ProfileFragment extends Fragment {
     Button btnSaved;
     DatabaseHelper db;
 
+    User user;
     Timer timer;
     String uid;
     String currentUid;
     String key;
+    String profilePicUrl;
     boolean following;
     boolean otherProfile;
     boolean[] gotResult = new boolean[1];
@@ -119,12 +121,18 @@ public class ProfileFragment extends Fragment {
                     .child("Users").child(uid).child("Followers").child(currentUid);
             if (following) {
                 following = false;
+                try {
+                    db.insertFriend(key, profilePicUrl, user);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 userFollowing.setValue(true);
                 userFollowers.setValue(true);
                 btnFollow.setText(R.string.unfollow);
             }
             else {
                 following = true;
+                db.deleteFriend(key);
                 userFollowing.removeValue();
                 userFollowers.removeValue();
                 btnFollow.setText(R.string.follow);
@@ -144,8 +152,8 @@ public class ProfileFragment extends Fragment {
         @Override
         public void onDataChange(@NonNull DataSnapshot snapshot) {
             gotResult[0] = true;
-            User user = snapshot.child("Object").getValue(User.class);
-            String profilePicUrl = snapshot.child("ProfilePic").getValue(String.class);
+            user = snapshot.child("Object").getValue(User.class);
+            profilePicUrl = snapshot.child("ProfilePic").getValue(String.class);
             if (isVisible()) {
                 setViews(user, profilePicUrl);
                 if (otherProfile) {
@@ -173,7 +181,7 @@ public class ProfileFragment extends Fragment {
         byte[] serializedUser = profileData.getBlob(2);
         ByteArrayInputStream bis = new ByteArrayInputStream(serializedUser);
         ObjectInput in = new ObjectInputStream(bis);
-        User user = (User) in.readObject();
+        user = (User) in.readObject();
         ((com.example.metaucapstone.MainActivity) getContext()).runOnUiThread(() -> {
             try {
                 setViews(user, db.getDefaultPfp());

@@ -203,6 +203,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public boolean deleteFriend(String uid) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        if (hasFriend(uid)) {
+            long result = db.delete("friends", "uid=?", new String[] {uid});
+            return result != -1;
+        }
+        return false;
+    }
+
     public Cursor getFriendsData() {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.rawQuery("SELECT * FROM friends", null);
