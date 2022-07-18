@@ -65,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.btnLogout:
                 FirebaseAuth.getInstance().signOut();
+                Cache cache = new Cache(this);
+                cache.clearCache();
                 startActivity(new Intent(MainActivity.this, com.example.metaucapstone.LoginActivity.class));
                 finish();
                 break;

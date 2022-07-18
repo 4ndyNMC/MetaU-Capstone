@@ -104,15 +104,21 @@ public class Cache {
     public void initCache() {
         db = new DatabaseHelper(context);
 
-        parent = FirebaseDatabase.getInstance().getReference();
-        parent.child("Usernames").addListenerForSingleValueEvent(getUsernames);
-        parent.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .child("Following").addListenerForSingleValueEvent(getFriends);
         try {
             storeDefaultPfp();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        parent = FirebaseDatabase.getInstance().getReference();
+        parent.child("Usernames").addListenerForSingleValueEvent(getUsernames);
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            parent.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                    .child("Following").addListenerForSingleValueEvent(getFriends);
+        }
     }
 
+    public void clearCache() {
+        db = new DatabaseHelper(context);
+        db.clearCache(db.getWritableDatabase());
+    }
 }
