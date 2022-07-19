@@ -274,6 +274,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public boolean deleteRecipe(String id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        if (hasRecipe(id)) {
+            long result = db.delete("recipes", "id=?", new String[] {id});
+            return result != -1;
+        }
+        return false;
+    }
+
     public Cursor getRecipeData() {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.rawQuery("SELECT * FROM recipes", null);

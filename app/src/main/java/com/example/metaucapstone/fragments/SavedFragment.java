@@ -182,7 +182,6 @@ public class SavedFragment extends com.example.metaucapstone.SearchResultFragmen
                                 });
                     }
                     fragment.getView().findViewById(R.id.pbSearchResults).setVisibility(View.GONE);
-
                 }
             }
 

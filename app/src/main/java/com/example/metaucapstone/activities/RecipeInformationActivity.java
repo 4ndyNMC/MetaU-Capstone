@@ -112,8 +112,12 @@ public class RecipeInformationActivity extends AppCompatActivity {
     private View.OnClickListener fabSaveClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (saved) unsaveRecipe();
-            else saveRecipe();
+            try {
+                if (saved) unsaveRecipe();
+                else saveRecipe();
+            } catch (IOException e) {
+                Log.e(TAG, e.toString());
+            }
         }
     };
 
@@ -153,11 +157,11 @@ public class RecipeInformationActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) { }
         });
         userReference.child("Recipes").child(recipe.getId()).removeValue();
-
+        db.deleteRecipe(recipe.getId());
         fabSave.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_sticky_note_2_24));
     }
 
-    private void saveRecipe() {
+    private void saveRecipe() throws IOException {
         saved = true;
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference recipeReference = FirebaseDatabase.getInstance().getReference()
@@ -200,6 +204,7 @@ public class RecipeInformationActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) { }
         });
+        db.insertRecipe(recipe.getId(), recipe);
         fabSave.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_close_24));
     }
 
