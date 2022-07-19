@@ -9,6 +9,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.example.metaucapstone.SplashScreenActivity;
+import com.example.metaucapstone.models.Recipe;
 import com.example.metaucapstone.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -86,6 +87,34 @@ public class Cache {
         public void onCancelled(@NonNull DatabaseError error) { }
     };
 
+    private final ValueEventListener getRecipes = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot snapshot) {
+            for (DataSnapshot recipeIdSnapshot : snapshot.getChildren()) {
+                parent.child("Recipes").child(recipeIdSnapshot.getKey())
+                        .addListenerForSingleValueEvent(addRecipeToCache);
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) { }
+    };
+
+    private final ValueEventListener addRecipeToCache = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot snapshot) {
+            try {
+                db.insertRecipe(snapshot.getKey(), snapshot.child("Object")
+                        .getValue(Recipe.class));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) { }
+    };
+
     private void storeDefaultPfp() throws IOException {
         HttpURLConnection connection = (HttpURLConnection) new URL(DEFAULT_PROFILE_PIC).openConnection();
         Thread thread = new Thread(() -> {
@@ -112,8 +141,10 @@ public class Cache {
         parent = FirebaseDatabase.getInstance().getReference();
         parent.child("Usernames").addListenerForSingleValueEvent(getUsernames);
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            parent.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                    .child("Following").addListenerForSingleValueEvent(getFriends);
+            DatabaseReference userRef = parent.child("Users")
+                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+            userRef.child("Following").addListenerForSingleValueEvent(getFriends);
+            userRef.child("Recipes").addListenerForSingleValueEvent(getRecipes);
         }
     }
 

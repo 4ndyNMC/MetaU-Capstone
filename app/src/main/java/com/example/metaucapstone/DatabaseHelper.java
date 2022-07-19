@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import com.example.metaucapstone.models.Recipe;
 import com.example.metaucapstone.models.User;
 
 import java.io.ByteArrayInputStream;
@@ -28,7 +29,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.i(TAG, "DATABASE CREATED");
         initCache(db);
     }
 
@@ -40,12 +40,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private void initCache(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS friends (uid TEXT PRIMARY KEY, profilePicUrl TEXT, object BLOB)");
         db.execSQL("CREATE TABLE IF NOT EXISTS usernames (uid TEXT PRIMARY KEY, username TEXT)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS recipes (id TEXT PRIMARY KEY, object BLOB)");
         db.execSQL("CREATE TABLE IF NOT EXISTS images (id TEXT PRIMARY KEY, image BLOB)");
     }
 
     public void clearCache(SQLiteDatabase db) {
-        db.execSQL("DROP TABLE IF EXISTS usernames");
         db.execSQL("DROP TABLE IF EXISTS friends");
+        db.execSQL("DROP TABLE IF EXISTS usernames");
+        db.execSQL("DROP TABLE IF EXISTS recipes");
         db.execSQL("DROP TABLE IF EXISTS images");
     }
 
@@ -115,7 +117,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put("uid", uid);
         contentValues.put("username", username);
-        Log.i(TAG, username + " username");
 
         long result = db.insert("usernames", null, contentValues);
         db.close();
@@ -221,5 +222,60 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (!hasFriend(uid)) return null;
         SQLiteDatabase db = this.getWritableDatabase();
         return db.rawQuery("SELECT * FROM friends WHERE uid = ?", new String[] {uid});
+    }
+
+    public boolean hasRecipe(String id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM recipes WHERE id = ?", new String[] {id});
+        boolean hasValue = cursor.getCount() > 0;
+        cursor.close();
+        return hasValue;
+    }
+
+    public boolean insertRecipe(String id, Recipe obj) throws IOException {
+        if (hasRecipe(id)) return updateRecipe(id, obj);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ObjectOutputStream out = null;
+        try {
+            out = new ObjectOutputStream(bos);
+            out.writeObject(obj);
+            out.flush();
+            byte[] serializedRecipe = bos.toByteArray();
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("id", id);
+            contentValues.put("object", serializedRecipe);
+
+            long result = db.insert("recipes", null, contentValues);
+            Log.i(TAG, "added: " + (result != -1));
+            return result != -1;
+        } finally {
+            bos.close();
+        }
+    }
+
+    public boolean updateRecipe(String id, Recipe obj) throws IOException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ObjectOutputStream out;
+        try {
+            out = new ObjectOutputStream(bos);
+            out.writeObject(obj);
+            out.flush();
+            byte[] serializedRecipe = bos.toByteArray();
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("id", id);
+            contentValues.put("object", serializedRecipe);
+
+            long result = db.update("recipes", contentValues, "id = ?", new String[] {id});
+            return result != -1;
+        } finally {
+            bos.close();
+        }
+    }
+
+    public Cursor getRecipeData() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.rawQuery("SELECT * FROM recipes", null);
     }
 }

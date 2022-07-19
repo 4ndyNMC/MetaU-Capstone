@@ -13,13 +13,14 @@ import org.parceler.Parcel;
 import org.parceler.ParcelConverter;
 import org.parceler.Parcels;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.PrimitiveIterator;
 
 @Parcel
-public class Recipe {
+public class Recipe implements Serializable {
 
     public enum Cuisine {
         AFRICAN, AMERICAN, BRITISH, CAJUN, CARIBBEAN, CHINESE, EASTERN_EUROPEAN,
