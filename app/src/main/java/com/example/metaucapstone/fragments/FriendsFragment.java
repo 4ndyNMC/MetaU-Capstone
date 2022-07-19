@@ -169,23 +169,25 @@ public class FriendsFragment extends Fragment {
     private void getFriendsFromDb() {
         Log.i(TAG, "pulling usernames from db");
         Cursor result = db.getFriendsData();
-        ((com.example.metaucapstone.MainActivity) getContext()).runOnUiThread(() -> {
-            while (result.moveToNext()) {
-                adapter.users.add(new HashMap<String, Object>() {{
-                    try {
-                        byte[] serializedUser = result.getBlob(2);
-                        ByteArrayInputStream bis = new ByteArrayInputStream(serializedUser);
-                        ObjectInput in = new ObjectInputStream(bis);
-                        put("username", ((User) in.readObject()).getDisplayName());
-                        put("uid", result.getString(0));
-                        put("imageUrl", db.getDefaultPfp());
-                    } catch (IOException | ClassNotFoundException e) {
-                        Log.e(TAG, e.toString());
-                    }
-                }});
-                adapter.notifyItemInserted(adapter.users.size() - 1);
-                pbFriends.setVisibility(View.GONE);
-            }
-        });
+        if (isVisible()) {
+            ((com.example.metaucapstone.MainActivity) getContext()).runOnUiThread(() -> {
+                while (result.moveToNext()) {
+                    adapter.users.add(new HashMap<String, Object>() {{
+                        try {
+                            byte[] serializedUser = result.getBlob(2);
+                            ByteArrayInputStream bis = new ByteArrayInputStream(serializedUser);
+                            ObjectInput in = new ObjectInputStream(bis);
+                            put("username", ((User) in.readObject()).getDisplayName());
+                            put("uid", result.getString(0));
+                            put("imageUrl", db.getDefaultPfp());
+                        } catch (IOException | ClassNotFoundException e) {
+                            Log.e(TAG, e.toString());
+                        }
+                    }});
+                    adapter.notifyItemInserted(adapter.users.size() - 1);
+                    pbFriends.setVisibility(View.GONE);
+                }
+            });
+        }
     }
 }
