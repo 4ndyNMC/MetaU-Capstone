@@ -213,8 +213,8 @@ public class RecipeInformationActivity extends AppCompatActivity {
     }
 
     private void setViews(String title, String summary, Object img) {
+        if (summary != null) tvSummary.setText(Html.fromHtml(summary, Html.FROM_HTML_MODE_COMPACT));
         tvTitle.setText(title);
-        tvSummary.setText(Html.fromHtml(summary, Html.FROM_HTML_MODE_COMPACT));
         Glide.with(this)
                 .load(img)
                 .transform(new CenterCrop(), new RoundedCorners(25))
