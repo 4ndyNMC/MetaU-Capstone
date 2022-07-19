@@ -94,6 +94,10 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 default: break;
             }
+            Fragment currentFragment = fragmentManager.findFragmentById(R.id.flContainer);
+            if (currentFragment != null && currentFragment.getClass() == fragment.getClass()) {
+                return true;
+            }
             fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
             return true;
         }

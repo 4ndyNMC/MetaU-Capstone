@@ -166,6 +166,8 @@ public class SavedFragment extends com.example.metaucapstone.SearchResultFragmen
                     gotResult[0] = true;
                     RecyclerView rvRecipes = fragment.getView().findViewById(R.id.rvRecipes);
                     RecipeAdapter adapter = (RecipeAdapter) rvRecipes.getAdapter();
+                    adapter.recipes.clear();
+                    adapter.notifyDataSetChanged();
                     for (DataSnapshot recipeSnapshot : snapshot.getChildren()) {
                         Log.i(TAG, recipeSnapshot.getKey());
                         recipeReference.child(recipeSnapshot.getKey()).child("Object")
