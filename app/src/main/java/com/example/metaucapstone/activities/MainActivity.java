@@ -96,6 +96,9 @@ public class MainActivity extends AppCompatActivity {
             }
             Fragment currentFragment = fragmentManager.findFragmentById(R.id.flContainer);
             if (currentFragment != null && currentFragment.getClass() == fragment.getClass()) {
+                if (currentFragment.getClass() == SavedFragment.class && fragment.getClass() == SavedFragment.class) {
+                    fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
+                }
                 return true;
             }
             fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
