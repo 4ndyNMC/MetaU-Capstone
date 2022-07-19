@@ -110,6 +110,7 @@ public class LoginActivity extends AppCompatActivity {
                     User user = new User(auth.getCurrentUser().getEmail());
                     storeUser(user);
                 }
+                new Cache(LoginActivity.this).initCache();
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
             } else if (task.getException().toString().contains("already in use")) {
                 Snackbar.make(clLogin, R.string.error_email_in_use,
