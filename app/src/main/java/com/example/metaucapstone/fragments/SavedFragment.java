@@ -90,6 +90,7 @@ public class SavedFragment extends com.example.metaucapstone.SearchResultFragmen
         public void onDataChange(@NonNull DataSnapshot snapshot) {
             if (!snapshot.hasChildren()) {
                 Log.i(TAG, "NO RESULTS");
+                gotResult[0] = true;
                 tvNoResults.setVisibility(View.VISIBLE);
                 pbSearchResults.setVisibility(View.GONE);
             }
@@ -119,7 +120,7 @@ public class SavedFragment extends com.example.metaucapstone.SearchResultFragmen
             @Override
             public void run() {
                 timer.cancel();
-                if (!gotResult[0]) {
+                if (isVisible() && !gotResult[0]) {
                     try {
                         getRecipesFromDb();
                     } catch (IOException | ClassNotFoundException e) {
@@ -162,6 +163,7 @@ public class SavedFragment extends com.example.metaucapstone.SearchResultFragmen
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (isVisible()) {
+                    gotResult[0] = true;
                     RecyclerView rvRecipes = fragment.getView().findViewById(R.id.rvRecipes);
                     RecipeAdapter adapter = (RecipeAdapter) rvRecipes.getAdapter();
                     for (DataSnapshot recipeSnapshot : snapshot.getChildren()) {

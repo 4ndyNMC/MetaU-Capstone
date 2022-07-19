@@ -33,6 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.parceler.Parcels;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +47,7 @@ public class RecipeInformationActivity extends AppCompatActivity {
     ImageView ivRecipeInfo;
     ProgressBar pbRecipeInfo;
     FloatingActionButton fabSave;
+    DatabaseHelper db;
     Recipe recipe;
 
     boolean saved;
@@ -65,11 +67,20 @@ public class RecipeInformationActivity extends AppCompatActivity {
         tvSummary = findViewById(R.id.tvSummary);
         ivRecipeInfo = findViewById(R.id.ivRecipeInfo);
         fabSave = findViewById(R.id.fabSave);
+        db = new DatabaseHelper(this);
 
         pbRecipeInfo = findViewById(R.id.pbRecipeInfo);
         tvTitle.setText(recipe.getName());
         pbRecipeInfo.setVisibility(ProgressBar.VISIBLE);
         Spoonacular.GetRecipeInfo(recipe, this);
+
+        if (db.hasRecipe(recipe.getId())) {
+            try {
+                setViews(recipe.getName(), recipe.getSummary(), db.getDefaultPfp());
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
 
         FirebaseDatabase.getInstance().getReference()
                 .child("Recipes").child(recipe.getId()).child("Users")
@@ -193,10 +204,14 @@ public class RecipeInformationActivity extends AppCompatActivity {
     }
 
     public void loadDataIntoUI(Recipe recipe) {
-        tvTitle.setText(recipe.getName());
-        tvSummary.setText(Html.fromHtml(recipe.getSummary(), Html.FROM_HTML_MODE_COMPACT));
+        setViews(recipe.getName(), recipe.getSummary(), recipe.getImageUrl());
+    }
+
+    private void setViews(String title, String summary, Object img) {
+        tvTitle.setText(title);
+        tvSummary.setText(Html.fromHtml(summary, Html.FROM_HTML_MODE_COMPACT));
         Glide.with(this)
-                .load(recipe.getImageUrl())
+                .load(img)
                 .transform(new CenterCrop(), new RoundedCorners(25))
                 .override(360, 160)
                 .into(ivRecipeInfo);

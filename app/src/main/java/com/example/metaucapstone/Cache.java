@@ -104,6 +104,7 @@ public class Cache {
         @Override
         public void onDataChange(@NonNull DataSnapshot snapshot) {
             try {
+                Log.i(TAG, "added recipe id " + snapshot.getKey());
                 db.insertRecipe(snapshot.getKey(), snapshot.child("Object")
                         .getValue(Recipe.class));
             } catch (IOException e) {
