@@ -23,10 +23,10 @@ import java.util.PrimitiveIterator;
 public class Recipe implements Serializable {
 
     public enum Cuisine {
-        AFRICAN, AMERICAN, BRITISH, CAJUN, CARIBBEAN, CHINESE, EASTERN_EUROPEAN,
-        EUROPEAN, FRENCH, GERMAN, GREEK, INDIAN, IRISH, ITALIAN, JAPANESE, JEWISH,
-        KOREAN, LATIN_AMERICAN, MEDITERRANEAN, MEXICAN, MIDDLE_EASTERN, NORDIC,
-        SOUTHERN, SPANISH, THAI, VIETNAMESE
+        AFRICAN, AMERICAN, BRITISH, CAJUN, CARIBBEAN, CHINESE, CREOLE, EASTERN_EUROPEAN,
+        EUROPEAN, FRENCH, GERMAN, GREEK, INDIAN, IRISH, ITALIAN, JAPANESE, JEWISH, KOREAN,
+        LATIN_AMERICAN, MEDITERRANEAN, MEXICAN, MIDDLE_EASTERN, NORDIC, OTHER, SOUTHERN,
+        SPANISH, THAI, VIETNAMESE
     }
 
     public enum MealType {
@@ -55,6 +55,7 @@ public class Recipe implements Serializable {
         put("Cajun", Cuisine.CAJUN);
         put("Caribbean", Cuisine.CARIBBEAN);
         put("Chinese", Cuisine.CHINESE);
+        put("Creole", Cuisine.CREOLE);
         put("Eastern European", Cuisine.EASTERN_EUROPEAN);
         put("European", Cuisine.EUROPEAN);
         put("French", Cuisine.FRENCH);
@@ -71,6 +72,7 @@ public class Recipe implements Serializable {
         put("Mexican", Cuisine.MEXICAN);
         put("Middle Eastern", Cuisine.MIDDLE_EASTERN);
         put("Nordic", Cuisine.NORDIC);
+        put("Other", Cuisine.OTHER);
         put("Southern", Cuisine.SOUTHERN);
         put("Spanish", Cuisine.SPANISH);
         put("Thai", Cuisine.THAI);
@@ -109,6 +111,7 @@ public class Recipe implements Serializable {
         intoleranceFree = new ArrayList<>();
         tags = new ArrayList<>();
         users = new ArrayList<>();
+        cuisines = new ArrayList<>();
 
         name = jsonObject.getString("title");
         id = jsonObject.getString("id");
@@ -176,6 +179,14 @@ public class Recipe implements Serializable {
         if (jsonObject.getBoolean("glutenFree")) intoleranceFree.add(Intolerance.GLUTEN);
         if (jsonObject.getBoolean("dairyFree")) intoleranceFree.add(Intolerance.DAIRY);
         if (jsonObject.getBoolean("veryHealthy")) tags.add(Tag.VERY_HEALTHY);
+        JSONArray jsonCuisines = jsonObject.getJSONArray("cuisines");
+        if (jsonCuisines.length() == 0) cuisines.add(Cuisine.OTHER);
+        else {
+            for (int i = 0; i < jsonCuisines.length(); i++) {
+                String cuisineName = jsonCuisines.getString(i);
+                if (CuisinesMap.containsKey(cuisineName)) cuisines.add(CuisinesMap.get(cuisineName));
+            }
+        }
         summary = jsonObject.getString("summary");
     }
 
