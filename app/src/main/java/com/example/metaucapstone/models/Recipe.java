@@ -48,55 +48,55 @@ public class Recipe implements Serializable {
         VERY_HEALTHY, CHEAP, VERY_POPULAR, SUSTAINABLE
     }
 
-    public static final HashMap<Cuisine, String> CuisinesMap = new HashMap<Cuisine, String>() {{
-        put(Cuisine.AFRICAN, "African");
-        put(Cuisine.AMERICAN, "American");
-        put(Cuisine.BRITISH, "British");
-        put(Cuisine.CAJUN, "Cajun");
-        put(Cuisine.CARIBBEAN, "Caribbean");
-        put(Cuisine.CHINESE, "Chinese");
-        put(Cuisine.EASTERN_EUROPEAN, "Eastern European");
-        put(Cuisine.EUROPEAN, "European");
-        put(Cuisine.FRENCH, "French");
-        put(Cuisine.GERMAN, "German");
-        put(Cuisine.GREEK, "Greek");
-        put(Cuisine.ITALIAN, "Italian");
-        put(Cuisine.INDIAN, "Indian");
-        put(Cuisine.IRISH, "Irish");
-        put(Cuisine.JAPANESE, "Japanese");
-        put(Cuisine.JEWISH, "Jewish");
-        put(Cuisine.KOREAN, "Korean");
-        put(Cuisine.LATIN_AMERICAN, "Latin American");
-        put(Cuisine.MEDITERRANEAN, "Mediterranean");
-        put(Cuisine.MEXICAN, "Mexican");
-        put(Cuisine.MIDDLE_EASTERN, "Middle Eastern");
-        put(Cuisine.NORDIC, "Nordic");
-        put(Cuisine.SOUTHERN, "Southern");
-        put(Cuisine.SPANISH, "Spanish");
-        put(Cuisine.THAI, "Thai");
-        put(Cuisine.VIETNAMESE, "Vietnamese");
+    public static final HashMap<String, Cuisine> CuisinesMap = new HashMap<String, Cuisine>() {{
+        put("African", Cuisine.AFRICAN);
+        put("American", Cuisine.AMERICAN);
+        put("British", Cuisine.BRITISH);
+        put("Cajun", Cuisine.CAJUN);
+        put("Caribbean", Cuisine.CARIBBEAN);
+        put("Chinese", Cuisine.CHINESE);
+        put("Eastern European", Cuisine.EASTERN_EUROPEAN);
+        put("European", Cuisine.EUROPEAN);
+        put("French", Cuisine.FRENCH);
+        put("German", Cuisine.GERMAN);
+        put("Greek", Cuisine.GREEK);
+        put("Italian", Cuisine.ITALIAN);
+        put("Indian", Cuisine.INDIAN);
+        put("Irish", Cuisine.IRISH);
+        put("Japanese", Cuisine.JAPANESE);
+        put("Jewish", Cuisine.JEWISH);
+        put("Korean", Cuisine.KOREAN);
+        put("Latin American", Cuisine.LATIN_AMERICAN);
+        put("Mediterranean", Cuisine.MEDITERRANEAN);
+        put("Mexican", Cuisine.MEXICAN);
+        put("Middle Eastern", Cuisine.MIDDLE_EASTERN);
+        put("Nordic", Cuisine.NORDIC);
+        put("Southern", Cuisine.SOUTHERN);
+        put("Spanish", Cuisine.SPANISH);
+        put("Thai", Cuisine.THAI);
+        put("Vietnamese", Cuisine.VIETNAMESE);
     }};
 
-    public static final HashMap<Diet, String> DietMap = new HashMap<Diet, String>() {{
-        put(Diet.GLUTEN_FREE, "Gluten-free");
-        put(Diet.KETOGENIC, "Ketogenic");
-        put(Diet.VEGETARIAN, "Vegetarian");
-        put(Diet.LACTO_VEGETARIAN, "Lacto-Vegetarian");
-        put(Diet.OVO_VEGETARIAN, "Ovo-Vegetarian");
-        put(Diet.VEGAN, "Vegan");
-        put(Diet.PESCETARIAN, "Pescetarian");
-        put(Diet.PALEO, "Paleo");
-        put(Diet.PRIMAL, "Primal");
-        put(Diet.LOW_FODMAP, "Low Fodmap");
-        put(Diet.WHOLE30, "Whole 30");
+    public static final HashMap<String, Diet> DietMap = new HashMap<String, Diet>() {{
+        put("Gluten-free", Diet.GLUTEN_FREE);
+        put("Ketogenic", Diet.KETOGENIC);
+        put("Vegetarian", Diet.VEGETARIAN);
+        put("Lacto-Vegetarian", Diet.LACTO_VEGETARIAN);
+        put("Ovo-Vegetarian", Diet.OVO_VEGETARIAN);
+        put("Vegan", Diet.VEGAN);
+        put("Pescetarian", Diet.PESCETARIAN);
+        put("Paleo", Diet.PALEO);
+        put("Primal", Diet.PRIMAL);
+        put("Low Fodmap", Diet.PRIMAL);
+        put("Whole 30", Diet.WHOLE30);
     }};
 
     private String name;
     private String id;
     private String imageUrl;
     private String summary;
-    private Cuisine cuisine;
     private MealType mealType;
+    private List<Cuisine> cuisines;
     private List<Diet> diets;
     private List<Intolerance> intoleranceFree;
     private List<Tag> tags;
@@ -139,8 +139,8 @@ public class Recipe implements Serializable {
         return summary;
     }
 
-    public Cuisine getCuisine() {
-        return cuisine;
+    public List<Cuisine> getCuisine() {
+        return cuisines;
     }
 
     public MealType getMealType() {

@@ -106,7 +106,7 @@ public class SearchFragment extends Fragment {
     }
 
     private void populateSpinner() {
-        List<String> cuisines = new ArrayList<>(Recipe.CuisinesMap.values());
+        List<String> cuisines = new ArrayList<>(Recipe.CuisinesMap.keySet());
         cuisines.sort(String::compareToIgnoreCase);
         cuisines.add(0, "");
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(),
