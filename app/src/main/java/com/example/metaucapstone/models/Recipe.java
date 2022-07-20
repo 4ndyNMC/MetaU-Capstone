@@ -180,6 +180,7 @@ public class Recipe implements Serializable {
         if (jsonObject.getBoolean("dairyFree")) intoleranceFree.add(Intolerance.DAIRY);
         if (jsonObject.getBoolean("veryHealthy")) tags.add(Tag.VERY_HEALTHY);
         JSONArray jsonCuisines = jsonObject.getJSONArray("cuisines");
+        if (cuisines == null) cuisines = new ArrayList<>();
         if (jsonCuisines.length() == 0) cuisines.add(Cuisine.OTHER);
         else {
             for (int i = 0; i < jsonCuisines.length(); i++) {
