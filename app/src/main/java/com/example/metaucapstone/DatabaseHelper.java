@@ -16,6 +16,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.HashMap;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -41,7 +42,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE IF NOT EXISTS friends (uid TEXT PRIMARY KEY, profilePicUrl TEXT, object BLOB)");
         db.execSQL("CREATE TABLE IF NOT EXISTS usernames (uid TEXT PRIMARY KEY, username TEXT)");
         db.execSQL("CREATE TABLE IF NOT EXISTS recipes (id TEXT PRIMARY KEY, object BLOB)");
-        db.execSQL("CREATE TABLE IF NOT EXISTS images (id TEXT PRIMARY KEY, image BLOB)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS images (id TEXT PRIMARY KEY, object BLOB)");
     }
 
     public void clearCache(SQLiteDatabase db) {
@@ -59,7 +60,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return hasValue;
     }
 
-    // TODO: abstract serialization
     public boolean storePfp(Bitmap img) throws IOException {
         if (pfpStored()) return true;
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -72,7 +72,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues contentValues = new ContentValues();
             contentValues.put("id", "default");
-            contentValues.put("image", serializedBitmap);
+            contentValues.put("object", serializedBitmap);
 
             long result = db.insert("images", null, contentValues);
             return result != -1;
@@ -95,55 +95,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return cachedBitmap.bitmap;
     }
 
-    public boolean hasUsername(String username) {
-        return hasValue("username", username);
-    }
-
     public boolean hasUid(String uid) {
-        return hasValue("uid", uid);
-    }
-
-    public boolean hasValue(String col, String val) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM usernames WHERE " + col + " = ?", new String[]{val});
-        boolean hasValue = cursor.getCount() > 0;
-        cursor.close();
-        return hasValue;
+        return tableContains("usernames", "uid", uid);
     }
 
     public boolean insertUsername(String uid, String username) {
         if (hasUid(uid)) return updateUsername(uid, username);
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("uid", uid);
-        contentValues.put("username", username);
-
-        long result = db.insert("usernames", null, contentValues);
-        db.close();
-        return result != -1;
+        return tableInsert("usernames", new HashMap<String, Object>() {{
+            put("uid", uid);
+            put("username", username);
+        }});
     }
 
     public boolean updateUsername(String uid, String username) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("uid", uid);
-        contentValues.put("username", username);
-        if (hasUid(uid)) {
-            long result = db.update("usernames", contentValues, "uid=?", new String[] {uid});
-            db.close();
-            return result != -1;
-        }
-        db.close();
-        return false;
-    }
-
-    public boolean deleteUsername(String username) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        if (hasUsername(username)) {
-            long result = db.delete("usernames", "username=?", new String[] {username});
-            return result != -1;
-        }
-        return false;
+        return tableUpdate("usernames", "uid = ?", uid, new HashMap<String, Object>() {{
+            put("uid", uid);
+            put("username", username);
+        }});
     }
 
     public Cursor getUsernameData() {
@@ -159,58 +127,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return hasValue;
     }
 
-    // TODO: abstract populating the ContentValues object in insertFriend & updateFriend
-    //       into helper method
     public boolean insertFriend(String uid, String profilePicUrl, User obj) throws IOException {
         if (hasFriend(uid)) return updateFriend(uid, profilePicUrl, obj);
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutputStream out = null;
-        try {
-            out = new ObjectOutputStream(bos);
-            out.writeObject(obj);
-            out.flush();
-            byte[] serializedUser = bos.toByteArray();
-            SQLiteDatabase db = this.getWritableDatabase();
-            ContentValues contentValues = new ContentValues();
-            contentValues.put("uid", uid);
-            contentValues.put("profilePicUrl", profilePicUrl);
-            contentValues.put("object", serializedUser);
-
-            long result = db.insert("friends", null, contentValues);
-            return result != -1;
-        } finally {
-            bos.close();
-        }
+        return tableInsert("friends", new HashMap<String, Object>() {{
+            put("uid", uid);
+            put("profilePicUrl", profilePicUrl);
+            put("object", serializeObject(obj));
+        }});
     }
 
     public boolean updateFriend(String uid, String profilePicUrl, User obj) throws IOException {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutputStream out;
-        try {
-            out = new ObjectOutputStream(bos);
-            out.writeObject(obj);
-            out.flush();
-            byte[] serializedUser = bos.toByteArray();
-            SQLiteDatabase db = this.getWritableDatabase();
-            ContentValues contentValues = new ContentValues();
-            contentValues.put("uid", uid);
-            contentValues.put("profilePicUrl", profilePicUrl);
-            contentValues.put("object", serializedUser);
-
-            long result = db.update("friends", contentValues, "uid = ?", new String[] {uid});
-            return result != -1;
-        } finally {
-            bos.close();
-        }
+        return tableUpdate("friends", "uid = ?", uid, new HashMap<String, Object>() {{
+            put("uid", uid);
+            put("profilePicUrl", profilePicUrl);
+            put("object", serializeObject(obj));
+        }});
     }
 
     public boolean deleteFriend(String uid) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        if (hasFriend(uid)) {
-            long result = db.delete("friends", "uid=?", new String[] {uid});
-            return result != -1;
-        }
-        return false;
+        return tableDelete("friends", "uid", uid);
     }
 
     public Cursor getFriendsData() {
@@ -225,66 +160,85 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public boolean hasRecipe(String id) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM recipes WHERE id = ?", new String[] {id});
-        boolean hasValue = cursor.getCount() > 0;
-        cursor.close();
-        return hasValue;
+        return tableContains("recipes", "id", id);
     }
 
     public boolean insertRecipe(String id, Recipe obj) throws IOException {
         if (hasRecipe(id)) return updateRecipe(id, obj);
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutputStream out = null;
-        try {
-            out = new ObjectOutputStream(bos);
-            out.writeObject(obj);
-            out.flush();
-            byte[] serializedRecipe = bos.toByteArray();
-            SQLiteDatabase db = this.getWritableDatabase();
-            ContentValues contentValues = new ContentValues();
-            contentValues.put("id", id);
-            contentValues.put("object", serializedRecipe);
-
-            long result = db.insert("recipes", null, contentValues);
-            Log.i(TAG, "added: " + (result != -1));
-            return result != -1;
-        } finally {
-            bos.close();
-        }
+        return tableInsert("recipes", new HashMap<String, Object>() {{
+            put("id", id);
+            put("object", serializeObject(obj));
+        }});
     }
 
     public boolean updateRecipe(String id, Recipe obj) throws IOException {
+        return tableUpdate("recipes", "id = ?", id, new HashMap<String ,Object>() {{
+            put("id", id);
+            put("object", serializeObject(obj));
+        }});
+    }
+
+    public boolean deleteRecipe(String id) {
+        return tableDelete("recipes", "id", id);
+    }
+
+    public Cursor getRecipeData() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.rawQuery("SELECT * FROM recipes", null);
+    }
+
+    private byte[] serializeObject(Object obj) {
+        byte[] serializedObject = null;
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutputStream out;
         try {
             out = new ObjectOutputStream(bos);
             out.writeObject(obj);
             out.flush();
-            byte[] serializedRecipe = bos.toByteArray();
-            SQLiteDatabase db = this.getWritableDatabase();
-            ContentValues contentValues = new ContentValues();
-            contentValues.put("id", id);
-            contentValues.put("object", serializedRecipe);
-
-            long result = db.update("recipes", contentValues, "id = ?", new String[] {id});
-            return result != -1;
-        } finally {
+            serializedObject = bos.toByteArray();
             bos.close();
+        } catch (IOException e) {
+            Log.e(TAG, "serialization error: " + e);
         }
+        return serializedObject;
     }
 
-    public boolean deleteRecipe(String id) {
+    private boolean tableInsert(String table, HashMap<String, Object> values) {
         SQLiteDatabase db = this.getWritableDatabase();
-        if (hasRecipe(id)) {
-            long result = db.delete("recipes", "id=?", new String[] {id});
+        ContentValues contentValues = new ContentValues();
+        for (String key : values.keySet()) {
+            if (key.equals("object")) contentValues.put(key, (byte[]) values.get(key));
+            else contentValues.put(key, (String) values.get(key));
+        }
+        long result = db.insert(table, null, contentValues);
+        return result != -1;
+    }
+
+    private boolean tableUpdate(String table, String whereClause, String column, HashMap<String, Object> values) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        for (String key : values.keySet()) {
+            if (key.equals("object")) contentValues.put(key, (byte[]) values.get(key));
+            else contentValues.put(key, (String) values.get(key));
+        }
+        long result = db.update(table, contentValues, whereClause, new String[] {column});
+        return result != -1;
+    }
+
+    private boolean tableDelete(String table, String column, String value) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        if (tableContains(table, column, value)) {
+            long result = db.delete(table, column + " = ?", new String[] {value});
             return result != -1;
         }
         return false;
     }
 
-    public Cursor getRecipeData() {
+    private boolean tableContains(String table, String column, String value) {
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.rawQuery("SELECT * FROM recipes", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + table + " WHERE " + column + " = ?", new String[]{value});
+        boolean hasValue = cursor.getCount() > 0;
+        cursor.close();
+        return hasValue;
     }
 }
