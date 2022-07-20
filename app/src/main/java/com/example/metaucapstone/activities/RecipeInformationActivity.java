@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
@@ -47,6 +48,7 @@ public class RecipeInformationActivity extends AppCompatActivity {
     ImageView ivRecipeInfo;
     ProgressBar pbRecipeInfo;
     FloatingActionButton fabSave;
+    LottieAnimationView lotRecipeInfo;
     DatabaseHelper db;
     Recipe recipe;
 
@@ -67,19 +69,18 @@ public class RecipeInformationActivity extends AppCompatActivity {
         tvSummary = findViewById(R.id.tvSummary);
         ivRecipeInfo = findViewById(R.id.ivRecipeInfo);
         fabSave = findViewById(R.id.fabSave);
+        lotRecipeInfo = findViewById(R.id.lotRecipeInfo);
         db = new DatabaseHelper(this);
 
         pbRecipeInfo = findViewById(R.id.pbRecipeInfo);
         tvTitle.setText(recipe.getName());
+        lotRecipeInfo.setVisibility(ProgressBar.VISIBLE);
         pbRecipeInfo.setVisibility(ProgressBar.VISIBLE);
         Spoonacular.GetRecipeInfo(recipe, this);
 
         if (db.hasRecipe(recipe.getId())) {
-            try {
-                setViews(recipe.getName(), recipe.getSummary(), db.getDefaultPfp());
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
+            ivRecipeInfo.setVisibility(View.GONE);
+            setViews(recipe.getName(), recipe.getSummary(), null);
         }
 
         FirebaseDatabase.getInstance().getReference()
@@ -210,6 +211,7 @@ public class RecipeInformationActivity extends AppCompatActivity {
 
     public void loadDataIntoUI(Recipe recipe) {
         setViews(recipe.getName(), recipe.getSummary(), recipe.getImageUrl());
+        lotRecipeInfo.setVisibility(View.GONE);
     }
 
     private void setViews(String title, String summary, Object img) {
@@ -220,6 +222,7 @@ public class RecipeInformationActivity extends AppCompatActivity {
                 .transform(new CenterCrop(), new RoundedCorners(25))
                 .override(360, 160)
                 .into(ivRecipeInfo);
+        ivRecipeInfo.setVisibility(View.VISIBLE);
         pbRecipeInfo.setVisibility(ProgressBar.GONE);
         fabSave.setVisibility(View.VISIBLE);
     }
