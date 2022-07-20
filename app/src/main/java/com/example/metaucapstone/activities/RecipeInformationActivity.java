@@ -143,8 +143,13 @@ public class RecipeInformationActivity extends AppCompatActivity {
     private void unsaveRecipe() {
         saved = false;
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference recipeReference = FirebaseDatabase.getInstance().getReference()
+                .child("Recipes").child(recipe.getId());
         DatabaseReference userReference = FirebaseDatabase.getInstance().getReference()
                 .child("Users").child(uid);
+
+        recipeReference.child("Users").child(uid).removeValue();
+        recipeReference.child("Object").child("users").child(uid).removeValue();
 
         userReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
