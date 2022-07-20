@@ -142,8 +142,12 @@ public class Recipe implements Serializable {
         return summary;
     }
 
-    public List<Cuisine> getCuisine() {
+    public List<Cuisine> getCuisines() {
         return cuisines;
+    }
+
+    public void setCuisines(List<Cuisine> cuisines) {
+        this.cuisines =  cuisines;
     }
 
     public MealType getMealType() {
@@ -188,6 +192,7 @@ public class Recipe implements Serializable {
                 if (CuisinesMap.containsKey(cuisineName)) cuisines.add(CuisinesMap.get(cuisineName));
             }
         }
+    if (cuisines.size() == 0) cuisines.add(Cuisine.OTHER);
         summary = jsonObject.getString("summary");
     }
 

@@ -21,10 +21,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.metaucapstone.models.Recipe;
 import com.example.metaucapstone.models.User;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,7 +33,6 @@ import org.parceler.Parcels;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class RecipeInformationActivity extends AppCompatActivity {
 
@@ -187,6 +183,7 @@ public class RecipeInformationActivity extends AppCompatActivity {
                     Recipe recipeFromDb = snapshot.child(recipe.getId()).child("Object")
                             .getValue(Recipe.class);
                     recipeFromDb.addUser(uid);
+                    recipeFromDb.setCuisines(recipe.getCuisines());
                     recipeReference.child(recipe.getId()).child("Object").setValue(recipeFromDb);
                 }
                 recipeReference.child(recipe.getId()).child("Users").child(uid)
