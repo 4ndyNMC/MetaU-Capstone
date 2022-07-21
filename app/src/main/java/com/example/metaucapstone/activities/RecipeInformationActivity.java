@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
@@ -33,6 +34,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.parceler.Parcels;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +48,8 @@ public class RecipeInformationActivity extends AppCompatActivity {
     ImageView ivRecipeInfo;
     ProgressBar pbRecipeInfo;
     FloatingActionButton fabSave;
+    LottieAnimationView lotRecipeInfo;
+    DatabaseHelper db;
     Recipe recipe;
 
     boolean saved;
@@ -65,11 +69,19 @@ public class RecipeInformationActivity extends AppCompatActivity {
         tvSummary = findViewById(R.id.tvSummary);
         ivRecipeInfo = findViewById(R.id.ivRecipeInfo);
         fabSave = findViewById(R.id.fabSave);
+        lotRecipeInfo = findViewById(R.id.lotRecipeInfo);
+        db = new DatabaseHelper(this);
 
         pbRecipeInfo = findViewById(R.id.pbRecipeInfo);
         tvTitle.setText(recipe.getName());
+        lotRecipeInfo.setVisibility(ProgressBar.VISIBLE);
         pbRecipeInfo.setVisibility(ProgressBar.VISIBLE);
         Spoonacular.GetRecipeInfo(recipe, this);
+
+        if (db.hasRecipe(recipe.getId())) {
+            ivRecipeInfo.setVisibility(View.GONE);
+            setViews(recipe.getName(), recipe.getSummary(), null);
+        }
 
         FirebaseDatabase.getInstance().getReference()
                 .child("Recipes").child(recipe.getId()).child("Users")
@@ -101,8 +113,12 @@ public class RecipeInformationActivity extends AppCompatActivity {
     private View.OnClickListener fabSaveClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (saved) unsaveRecipe();
-            else saveRecipe();
+            try {
+                if (saved) unsaveRecipe();
+                else saveRecipe();
+            } catch (IOException e) {
+                Log.e(TAG, e.toString());
+            }
         }
     };
 
@@ -142,11 +158,11 @@ public class RecipeInformationActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) { }
         });
         userReference.child("Recipes").child(recipe.getId()).removeValue();
-
+        db.deleteRecipe(recipe.getId());
         fabSave.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_sticky_note_2_24));
     }
 
-    private void saveRecipe() {
+    private void saveRecipe() throws IOException {
         saved = true;
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference recipeReference = FirebaseDatabase.getInstance().getReference()
@@ -189,17 +205,24 @@ public class RecipeInformationActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) { }
         });
+        db.insertRecipe(recipe.getId(), recipe);
         fabSave.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_close_24));
     }
 
     public void loadDataIntoUI(Recipe recipe) {
-        tvTitle.setText(recipe.getName());
-        tvSummary.setText(Html.fromHtml(recipe.getSummary(), Html.FROM_HTML_MODE_COMPACT));
+        setViews(recipe.getName(), recipe.getSummary(), recipe.getImageUrl());
+        lotRecipeInfo.setVisibility(View.GONE);
+    }
+
+    private void setViews(String title, String summary, Object img) {
+        if (summary != null) tvSummary.setText(Html.fromHtml(summary, Html.FROM_HTML_MODE_COMPACT));
+        tvTitle.setText(title);
         Glide.with(this)
-                .load(recipe.getImageUrl())
+                .load(img)
                 .transform(new CenterCrop(), new RoundedCorners(25))
                 .override(360, 160)
                 .into(ivRecipeInfo);
+        ivRecipeInfo.setVisibility(View.VISIBLE);
         pbRecipeInfo.setVisibility(ProgressBar.GONE);
         fabSave.setVisibility(View.VISIBLE);
     }

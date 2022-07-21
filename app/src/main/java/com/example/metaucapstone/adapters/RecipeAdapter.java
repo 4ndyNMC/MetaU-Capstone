@@ -54,9 +54,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         }
 
         @Override
-        public void onClick(View v) {
-
-        }
+        public void onClick(View v) { }
 
         public void bind(Recipe recipe) {
             tvRecipeName.setText(recipe.getName());

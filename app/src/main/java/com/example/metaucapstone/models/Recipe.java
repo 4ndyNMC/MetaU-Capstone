@@ -13,13 +13,14 @@ import org.parceler.Parcel;
 import org.parceler.ParcelConverter;
 import org.parceler.Parcels;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.PrimitiveIterator;
 
 @Parcel
-public class Recipe {
+public class Recipe implements Serializable {
 
     public enum Cuisine {
         AFRICAN, AMERICAN, BRITISH, CAJUN, CARIBBEAN, CHINESE, EASTERN_EUROPEAN,
@@ -48,27 +49,45 @@ public class Recipe {
     }
 
     public static final HashMap<Cuisine, String> CuisinesMap = new HashMap<Cuisine, String>() {{
-        put(Cuisine.AFRICAN, "African"); put(Cuisine.AMERICAN, "American");
-        put(Cuisine.BRITISH, "British"); put(Cuisine.CAJUN, "Cajun");
-        put(Cuisine.CARIBBEAN, "Caribbean"); put(Cuisine.CHINESE, "Chinese");
-        put(Cuisine.EASTERN_EUROPEAN, "Eastern European"); put(Cuisine.EUROPEAN, "European");
-        put(Cuisine.FRENCH, "French"); put(Cuisine.GERMAN, "German");
-        put(Cuisine.GREEK, "Greek"); put(Cuisine.ITALIAN, "Italian");
-        put(Cuisine.INDIAN, "Indian"); put(Cuisine.IRISH, "Irish");
-        put(Cuisine.JAPANESE, "Japanese"); put(Cuisine.JEWISH, "Jewish");
-        put(Cuisine.KOREAN, "Korean"); put(Cuisine.LATIN_AMERICAN, "Latin American");
-        put(Cuisine.MEDITERRANEAN, "Mediterranean"); put(Cuisine.MEXICAN, "Mexican");
-        put(Cuisine.MIDDLE_EASTERN, "Middle Eastern"); put(Cuisine.NORDIC, "Nordic");
-        put(Cuisine.SOUTHERN, "Southern"); put(Cuisine.SPANISH, "Spanish");
-        put(Cuisine.THAI, "Thai"); put(Cuisine.VIETNAMESE, "Vietnamese");
+        put(Cuisine.AFRICAN, "African");
+        put(Cuisine.AMERICAN, "American");
+        put(Cuisine.BRITISH, "British");
+        put(Cuisine.CAJUN, "Cajun");
+        put(Cuisine.CARIBBEAN, "Caribbean");
+        put(Cuisine.CHINESE, "Chinese");
+        put(Cuisine.EASTERN_EUROPEAN, "Eastern European");
+        put(Cuisine.EUROPEAN, "European");
+        put(Cuisine.FRENCH, "French");
+        put(Cuisine.GERMAN, "German");
+        put(Cuisine.GREEK, "Greek");
+        put(Cuisine.ITALIAN, "Italian");
+        put(Cuisine.INDIAN, "Indian");
+        put(Cuisine.IRISH, "Irish");
+        put(Cuisine.JAPANESE, "Japanese");
+        put(Cuisine.JEWISH, "Jewish");
+        put(Cuisine.KOREAN, "Korean");
+        put(Cuisine.LATIN_AMERICAN, "Latin American");
+        put(Cuisine.MEDITERRANEAN, "Mediterranean");
+        put(Cuisine.MEXICAN, "Mexican");
+        put(Cuisine.MIDDLE_EASTERN, "Middle Eastern");
+        put(Cuisine.NORDIC, "Nordic");
+        put(Cuisine.SOUTHERN, "Southern");
+        put(Cuisine.SPANISH, "Spanish");
+        put(Cuisine.THAI, "Thai");
+        put(Cuisine.VIETNAMESE, "Vietnamese");
     }};
 
     public static final HashMap<Diet, String> DietMap = new HashMap<Diet, String>() {{
-        put(Diet.GLUTEN_FREE, "Gluten-free"); put(Diet.KETOGENIC, "Ketogenic");
-        put(Diet.VEGETARIAN, "Vegetarian"); put(Diet.LACTO_VEGETARIAN, "Lacto-Vegetarian");
-        put(Diet.OVO_VEGETARIAN, "Ovo-Vegetarian"); put(Diet.VEGAN, "Vegan");
-        put(Diet.PESCETARIAN, "Pescetarian"); put(Diet.PALEO, "Paleo");
-        put(Diet.PRIMAL, "Primal"); put(Diet.LOW_FODMAP, "Low Fodmap");
+        put(Diet.GLUTEN_FREE, "Gluten-free");
+        put(Diet.KETOGENIC, "Ketogenic");
+        put(Diet.VEGETARIAN, "Vegetarian");
+        put(Diet.LACTO_VEGETARIAN, "Lacto-Vegetarian");
+        put(Diet.OVO_VEGETARIAN, "Ovo-Vegetarian");
+        put(Diet.VEGAN, "Vegan");
+        put(Diet.PESCETARIAN, "Pescetarian");
+        put(Diet.PALEO, "Paleo");
+        put(Diet.PRIMAL, "Primal");
+        put(Diet.LOW_FODMAP, "Low Fodmap");
         put(Diet.WHOLE30, "Whole 30");
     }};
 

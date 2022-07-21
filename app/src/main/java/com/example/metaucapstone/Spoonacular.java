@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.metaucapstone.models.Recipe;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.HttpUrl;
+import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -22,6 +23,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Spoonacular {
 
@@ -29,6 +32,7 @@ public class Spoonacular {
     public static String RECIPE_INFO_URL = "https://api.spoonacular.com/recipes/";
     public static String API_KEY;
     public static String COMPLEX_SEARCH_URL;
+    public static long RETRY_TIME = 3000L;
 
     public Spoonacular(Context context) {
         API_KEY = context.getString(R.string.SPOONACULAR_API_KEY);
@@ -90,12 +94,11 @@ public class Spoonacular {
         Request request = new Request.Builder()
                 .url(requestUrl)
                 .build();
-        Log.i(TAG, requestUrl);
-
-        client.newCall(request).enqueue(new Callback() {
+        Callback callback = new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
                 Log.e(TAG, "Getting more information on recipes failed", e);
+                retryRecipeInfo(client, request, this);
             }
 
             @Override
@@ -116,7 +119,18 @@ public class Spoonacular {
                     });
                 }
             }
-        });
+        };
+        client.setRetryOnConnectionFailure(true);
+        client.newCall(request).enqueue(callback);
     }
 
+    // TODO: find better way to space out retries
+    private static void retryRecipeInfo(OkHttpClient client, Request request, Callback callback) {
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                client.newCall(request).enqueue(callback);
+            }
+        }, RETRY_TIME);
+    }
 }
