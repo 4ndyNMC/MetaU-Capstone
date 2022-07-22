@@ -116,6 +116,8 @@ public class FriendsFragment extends Fragment {
                 pbFriends.setVisibility(View.GONE);
                 return;
             }
+            int numFriends = (int) snapshot.child("Following").getChildrenCount();
+            int[] inserted = new int[] {0};
             for (DataSnapshot friend : snapshot.child("Following").getChildren()) {
                 FirebaseDatabase.getInstance().getReference().child("Users").child(friend.getKey())
                         .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -130,9 +132,12 @@ public class FriendsFragment extends Fragment {
                                     put("score", calculateScore(snapshot));
                                 }};
                                 adapter.users.add(friendMap);
-                                sortUsersPoints(adapter.users);
-                                adapter.notifyItemInserted(adapter.users.size() - 1);
                                 gotResult[0] = true;
+                                inserted[0]++;
+                                if (inserted[0] == numFriends) {
+                                    sortUsersPoints(adapter.users);
+                                    adapter.notifyItemInserted(adapter.users.size() - 1);
+                                }
                             }
 
                             @Override
