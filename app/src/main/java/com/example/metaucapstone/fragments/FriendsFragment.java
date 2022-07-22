@@ -33,6 +33,7 @@ import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,9 +44,9 @@ public class FriendsFragment extends Fragment {
 
     public static final String TAG = "FriendsFragment";
     public static final long TIMEOUT_LENGTH = 3000L;
-    private static final long LAST_ONLINE_WEIGHT = 100L;
-    private static final long TOTAL_RECIPES_WEIGHT = 100L;
+    private static final long TOTAL_RECIPES_WEIGHT = 1L;
     private static final long RELEVANT_RECIPES_WEIGHT = 0L;
+    private static final long LAST_ONLINE_WEIGHT = -1L;
 
     FragmentManager fragmentManager;
     RecyclerView rvFriends;
@@ -223,10 +224,10 @@ public class FriendsFragment extends Fragment {
     }
 
     private long calculateScore(DataSnapshot friendSnapshot) {
-        long lastOnline = friendSnapshot.child("LastOnline").getValue(Long.class);
         long totalRecipes = friendSnapshot.child("Recipes").getChildrenCount();
         long relevantRecipes = 0;
-        Log.i(TAG, friendSnapshot.getKey() + " has: lastOnline - " + lastOnline + ", totalRecipes - " + totalRecipes);
-        return LAST_ONLINE_WEIGHT * lastOnline + TOTAL_RECIPES_WEIGHT * totalRecipes + RELEVANT_RECIPES_WEIGHT * relevantRecipes;
+        long onlineAgo = (new Date).getTime() - friendSnapshot.child("LastOnline").getValue(Long.class);
+        Log.i(TAG, friendSnapshot.getKey() + " has: lastOnline - " + onlineAgo + ", totalRecipes - " + totalRecipes);
+        return TOTAL_RECIPES_WEIGHT * totalRecipes + RELEVANT_RECIPES_WEIGHT * relevantRecipes + LAST_ONLINE_WEIGHT * onlineAgo;
     }
 }
