@@ -43,6 +43,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE IF NOT EXISTS usernames (uid TEXT PRIMARY KEY, username TEXT)");
         db.execSQL("CREATE TABLE IF NOT EXISTS recipes (id TEXT PRIMARY KEY, object BLOB)");
         db.execSQL("CREATE TABLE IF NOT EXISTS images (id TEXT PRIMARY KEY, object BLOB)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS userData (stat TEXT PRIMARY KEY, value TEXT)");
     }
 
     public void clearCache(SQLiteDatabase db) {
@@ -50,6 +51,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS usernames");
         db.execSQL("DROP TABLE IF EXISTS recipes");
         db.execSQL("DROP TABLE IF EXISTS images");
+        db.execSQL("DROP TABLE IF EXISTS userData");
     }
 
     public boolean pfpStored() {
@@ -185,6 +187,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Cursor getRecipeData() {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.rawQuery("SELECT * FROM recipes", null);
+    }
+
+    public boolean hasUserData(String stat) {
+        return tableContains("userData", "stat", stat);
+    }
+
+    public boolean setUserData(String stat, String value) {
+        if (hasUserData(stat)) return updateUserData(stat, value);
+        return tableInsert("userData", new HashMap<String, Object>() {{
+            put("stat", stat);
+            put("value", value);
+        }});
+    }
+
+    public boolean updateUserData(String stat, String value) {
+        return tableUpdate("userData", "stat = ?", stat, new HashMap<String, Object>() {{
+            put("stat", stat);
+            put("value", value);
+        }});
     }
 
     private byte[] serializeObject(Object obj) {

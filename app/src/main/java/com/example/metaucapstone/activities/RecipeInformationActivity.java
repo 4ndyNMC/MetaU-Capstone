@@ -213,8 +213,15 @@ public class RecipeInformationActivity extends AppCompatActivity {
                 User user = snapshot.child("Object").getValue(User.class);
                 user.saveRecipe(recipe);
                 userReference.child("Object").setValue(user);
-                userReference.child("Recipes").child(recipe.getId())
-                        .setValue(true);
+                userReference.child("Recipes").child(recipe.getId()).setValue(true);
+                for (Recipe.Cuisine cuisine : recipe.getCuisines()) {
+                    if (snapshot.child("Counts").hasChild(cuisine.name())) {
+                        userReference.child("Counts").child(cuisine.name())
+                                .setValue(snapshot.child("Counts").child(cuisine.name()).getValue(Integer.class));
+                    } else {
+                        userReference.child("Counts").child(cuisine.name()).setValue(1);
+                    }
+                }
             }
 
             @Override
