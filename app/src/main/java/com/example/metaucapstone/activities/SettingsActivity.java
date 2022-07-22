@@ -10,6 +10,8 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -104,13 +106,14 @@ public class SettingsActivity extends AppCompatActivity {
                     break;
                 case CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE:
                     Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
-                    Glide.with(this).load(takenImage).circleCrop().into(ivProfilePic);
+                    Bitmap correctImage = rotateBitmap(takenImage);
+                    Glide.with(this).load(correctImage).circleCrop().into(ivProfilePic);
                     uploadedImage = true;
                     break;
                 default:
                     break;
             }
-                Log.i(TAG, "image not selected");
+            Log.i(TAG, "image not selected");
         } else {
             Snackbar.make(clSettings, "Something went wrong", Snackbar.LENGTH_LONG);
             Log.i(TAG, "something went wrong");
@@ -193,6 +196,36 @@ public class SettingsActivity extends AppCompatActivity {
             startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
         }
     };
+
+    private Bitmap rotateBitmap(Bitmap bitmap) {
+        // Create and configure BitmapFactory
+        BitmapFactory.Options bounds = new BitmapFactory.Options();
+        bounds.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(photoFile.getAbsolutePath(), bounds);
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+//        Bitmap bm = BitmapFactory.decodeFile(photoFile.getAbsolutePath(), opts);
+
+        // Read EXIF Data
+        ExifInterface exif = null;
+        try {
+            exif = new ExifInterface(photoFile.getAbsoluteFile());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String orientString = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
+        int orientation = orientString != null ? Integer.parseInt(orientString) : ExifInterface.ORIENTATION_NORMAL;
+        int rotationAngle = 0;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_90) rotationAngle = 90;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_180) rotationAngle = 180;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_270) rotationAngle = 270;
+
+        // Rotate Bitmap
+        Matrix matrix = new Matrix();
+        matrix.setRotate(rotationAngle, (float) bitmap.getWidth() / 2, (float) bitmap.getHeight() / 2);
+        Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bounds.outWidth, bounds.outHeight, matrix, true);
+        // Return result
+        return rotatedBitmap;
+    }
 
     private void setUpProfilePic() {
         pbSettings.setVisibility(View.VISIBLE);
