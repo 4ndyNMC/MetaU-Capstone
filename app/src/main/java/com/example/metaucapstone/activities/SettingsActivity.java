@@ -59,6 +59,7 @@ public class SettingsActivity extends AppCompatActivity {
     ImageView ivProfilePic;
     ProgressBar pbSettings;
 
+    String currentUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
     private User user;
     private File photoFile;
     private Uri imageUri;
@@ -84,6 +85,18 @@ public class SettingsActivity extends AppCompatActivity {
         fabSave.setOnClickListener(fabSaveClicked);
         btnGallery.setOnClickListener(btnGalleryClicked);
         btnCamera.setOnClickListener(btnCameraClicked);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ((AppContext)getApplication()).setIsAppRunning(true, currentUid);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ((AppContext)getApplication()).setIsAppRunning(false, currentUid);
     }
 
     @Override

@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationItemView btnFriends;
     Fragment fragment;
 
+    String currentUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +54,18 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigationView.setOnNavigationItemSelectedListener(bottomNavigationClicked);
         btnSearch.performClick();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ((AppContext)getApplication()).setIsAppRunning(true, currentUid);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ((AppContext)getApplication()).setIsAppRunning(false, currentUid);
     }
 
     @Override

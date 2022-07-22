@@ -48,6 +48,7 @@ public class RecipeInformationActivity extends AppCompatActivity {
     DatabaseHelper db;
     Recipe recipe;
 
+    String currentUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
     boolean saved;
 
     @Override
@@ -85,6 +86,18 @@ public class RecipeInformationActivity extends AppCompatActivity {
 
         fabSave.setVisibility(View.GONE);
         fabSave.setOnClickListener(fabSaveClicked);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ((AppContext)getApplication()).setIsAppRunning(true, currentUid);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ((AppContext)getApplication()).setIsAppRunning(false, currentUid);
     }
 
     @Override
