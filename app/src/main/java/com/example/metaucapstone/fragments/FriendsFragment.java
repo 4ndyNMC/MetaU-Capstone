@@ -44,9 +44,9 @@ public class FriendsFragment extends Fragment {
 
     public static final String TAG = "FriendsFragment";
     public static final long TIMEOUT_LENGTH = 3000L;
-    private static final long TOTAL_RECIPES_WEIGHT = 1L;
-    private static final long RELEVANT_RECIPES_WEIGHT = 0L;
-    private static final long LAST_ONLINE_WEIGHT = -1L;
+    private static final long TOTAL_RECIPES_WEIGHT = 50000000L;
+    private static final long RELEVANT_RECIPES_WEIGHT = 10000000L;
+    private static final long LAST_ONLINE_WEIGHT = -100L;
 
     FragmentManager fragmentManager;
     RecyclerView rvFriends;
@@ -123,20 +123,20 @@ public class FriendsFragment extends Fragment {
                 FirebaseDatabase.getInstance().getReference().child("Users").child(friend.getKey())
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            public void onDataChange(@NonNull DataSnapshot friendSnapshot) {
                                 Map<String, Object> friendMap = new HashMap<String, Object>() {{
-                                    put("uid", snapshot.getKey());
-                                    put("username", snapshot.child("Object/displayName")
+                                    put("uid", friendSnapshot.getKey());
+                                    put("username", friendSnapshot.child("Object/displayName")
                                             .getValue(String.class));
-                                    put("imageUrl", snapshot.child("ProfilePic")
+                                    put("imageUrl", friendSnapshot.child("ProfilePic")
                                             .getValue(String.class));
-                                    put("score", calculateScore(snapshot));
+                                    put("score", calculateScore(friendSnapshot, getRelevantRecipes(snapshot, friendSnapshot)));
                                 }};
                                 adapter.users.add(friendMap);
                                 gotResult[0] = true;
                                 inserted[0]++;
                                 if (inserted[0] == numFriends) {
-                                    sortUsersPoints(adapter.users);
+                                    sortUsersPoints(adapter.users, 0, adapter.users.size() - 1);
                                     adapter.notifyItemInserted(adapter.users.size() - 1);
                                 }
                             }
@@ -204,6 +204,27 @@ public class FriendsFragment extends Fragment {
         }
     }
 
+    private long calculateScore(DataSnapshot friendSnapshot, int relevantRecipes) {
+        long totalRecipes = friendSnapshot.child("Recipes").getChildrenCount();
+        long onlineAgo = (new Date()).getTime() - friendSnapshot.child("LastOnline").getValue(Long.class);
+        Log.i(TAG, friendSnapshot.getKey() + " has: lastOnline - " + onlineAgo
+                + ", totalRecipes - " + totalRecipes
+                + ", relevantRecipes - " + relevantRecipes);
+        long score = TOTAL_RECIPES_WEIGHT * totalRecipes + RELEVANT_RECIPES_WEIGHT * relevantRecipes + LAST_ONLINE_WEIGHT * onlineAgo;
+        Log.i(TAG, friendSnapshot.child("Object").getValue(User.class).getDisplayName() + " has score " + score + " ... " + friendSnapshot.getKey());
+        return score;
+    }
+
+    private int getRelevantRecipes(DataSnapshot snapshot, DataSnapshot friendSnapshot) {
+        DataSnapshot userRecipes = snapshot.child("Recipes");
+        DataSnapshot friendRecipes = friendSnapshot.child("Recipes");
+        int relevantRecipes = 0;
+        for (DataSnapshot recipe : userRecipes.getChildren()) {
+            if (friendRecipes.hasChild(recipe.getKey())) relevantRecipes++;
+        }
+        return relevantRecipes;
+    }
+
     private void sortUsersAlphabetically(List<Map<String, Object>> list) {
         Collections.sort(list, new Comparator<Map<String, Object>>() {
             @Override
@@ -214,20 +235,37 @@ public class FriendsFragment extends Fragment {
         });
     }
 
-    private void sortUsersPoints(List<Map<String, Object>> list) {
-        Collections.sort(list, new Comparator<Map<String, Object>>() {
-            @Override
-            public int compare(Map<String, Object> o1, Map<String, Object> o2) {
-                return (int) (((Long) o2.get("score")) - ((Long) o1.get("score")));
-            }
-        });
+    private void sortUsersPoints(List<Map<String, Object>> list, int begin, int end) {
+        if (begin < end) {
+            int partitionIndex = partition(list, begin, end);
+
+            sortUsersPoints(list, begin, partitionIndex-1);
+            sortUsersPoints(list, partitionIndex+1, end);
+        }
     }
 
-    private long calculateScore(DataSnapshot friendSnapshot) {
-        long totalRecipes = friendSnapshot.child("Recipes").getChildrenCount();
-        long relevantRecipes = 0;
-        long onlineAgo = (new Date()).getTime() - friendSnapshot.child("LastOnline").getValue(Long.class);
-        Log.i(TAG, friendSnapshot.getKey() + " has: lastOnline - " + onlineAgo + ", totalRecipes - " + totalRecipes);
-        return TOTAL_RECIPES_WEIGHT * totalRecipes + RELEVANT_RECIPES_WEIGHT * relevantRecipes + LAST_ONLINE_WEIGHT * onlineAgo;
+    private int partition(List<Map<String, Object>> list, int begin, int end) {
+        long pivot = score(list.get(end));
+        int i = (begin-1);
+
+        for (int j = begin; j < end; j++) {
+            if (score(list.get(j)) > pivot) {
+                i++;
+
+                Map<String, Object> swapTemp = list.get(i);
+                list.set(i, list.get(j));
+                list.set(j, swapTemp);
+            }
+        }
+
+        Map<String, Object> swapTemp = list.get(i + 1);
+        list.set(i + 1, list.get(end));
+        list.set(end, swapTemp);
+
+        return i+1;
+    }
+
+    private long score(Map<String, Object> user) {
+        return (long) user.get("score");
     }
 }
