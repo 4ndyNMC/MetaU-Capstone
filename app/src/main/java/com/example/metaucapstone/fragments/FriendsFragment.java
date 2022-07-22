@@ -226,7 +226,7 @@ public class FriendsFragment extends Fragment {
     private long calculateScore(DataSnapshot friendSnapshot) {
         long totalRecipes = friendSnapshot.child("Recipes").getChildrenCount();
         long relevantRecipes = 0;
-        long onlineAgo = (new Date).getTime() - friendSnapshot.child("LastOnline").getValue(Long.class);
+        long onlineAgo = (new Date()).getTime() - friendSnapshot.child("LastOnline").getValue(Long.class);
         Log.i(TAG, friendSnapshot.getKey() + " has: lastOnline - " + onlineAgo + ", totalRecipes - " + totalRecipes);
         return TOTAL_RECIPES_WEIGHT * totalRecipes + RELEVANT_RECIPES_WEIGHT * relevantRecipes + LAST_ONLINE_WEIGHT * onlineAgo;
     }
