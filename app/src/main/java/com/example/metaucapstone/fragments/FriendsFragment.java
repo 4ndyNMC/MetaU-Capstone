@@ -43,9 +43,9 @@ public class FriendsFragment extends Fragment {
 
     public static final String TAG = "FriendsFragment";
     public static final long TIMEOUT_LENGTH = 3000L;
-    private static final int LAST_ONLINE_WEIGHT = 0;
-    private static final int TOTAL_RECIPES_WEIGHT = 100;
-    private static final int RELEVANT_RECIPES_WEIGHT = 0;
+    private static final long LAST_ONLINE_WEIGHT = 100L;
+    private static final long TOTAL_RECIPES_WEIGHT = 100L;
+    private static final long RELEVANT_RECIPES_WEIGHT = 0L;
 
     FragmentManager fragmentManager;
     RecyclerView rvFriends;
@@ -217,15 +217,16 @@ public class FriendsFragment extends Fragment {
         Collections.sort(list, new Comparator<Map<String, Object>>() {
             @Override
             public int compare(Map<String, Object> o1, Map<String, Object> o2) {
-                return ((Integer) o2.get("score")) - ((Integer) o1.get("score"));
+                return (int) (((Long) o2.get("score")) - ((Long) o1.get("score")));
             }
         });
     }
 
-    private int calculateScore(DataSnapshot friendSnapshot) {
-        int lastOnline = 1;
-        int totalRecipes = (int) friendSnapshot.child("Recipes").getChildrenCount();
-        int relevantRecipes = 0;
+    private long calculateScore(DataSnapshot friendSnapshot) {
+        long lastOnline = friendSnapshot.child("LastOnline").getValue(Long.class);
+        long totalRecipes = friendSnapshot.child("Recipes").getChildrenCount();
+        long relevantRecipes = 0;
+        Log.i(TAG, friendSnapshot.getKey() + " has: lastOnline - " + lastOnline + ", totalRecipes - " + totalRecipes);
         return LAST_ONLINE_WEIGHT * lastOnline + TOTAL_RECIPES_WEIGHT * totalRecipes + RELEVANT_RECIPES_WEIGHT * relevantRecipes;
     }
 }
