@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -32,6 +31,8 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +43,9 @@ public class FriendsFragment extends Fragment {
 
     public static final String TAG = "FriendsFragment";
     public static final long TIMEOUT_LENGTH = 3000L;
+    private static final int LAST_ONLINE_WEIGHT = 0;
+    private static final int TOTAL_RECIPES_WEIGHT = 100;
+    private static final int RELEVANT_RECIPES_WEIGHT = 0;
 
     FragmentManager fragmentManager;
     RecyclerView rvFriends;
@@ -107,12 +111,14 @@ public class FriendsFragment extends Fragment {
             com.example.metaucapstone.UserAdapter adapter = (com.example.metaucapstone.UserAdapter) rvFriends.getAdapter();
             adapter.users.clear();
             adapter.notifyDataSetChanged();
-            if (!snapshot.hasChildren()) {
+            if (!snapshot.child("Following").hasChildren()) {
                 tvNoFriends.setVisibility(View.VISIBLE);
                 pbFriends.setVisibility(View.GONE);
                 return;
             }
-            for (DataSnapshot friend : snapshot.getChildren()) {
+            int numFriends = (int) snapshot.child("Following").getChildrenCount();
+            int[] inserted = new int[] {0};
+            for (DataSnapshot friend : snapshot.child("Following").getChildren()) {
                 FirebaseDatabase.getInstance().getReference().child("Users").child(friend.getKey())
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -123,10 +129,15 @@ public class FriendsFragment extends Fragment {
                                             .getValue(String.class));
                                     put("imageUrl", snapshot.child("ProfilePic")
                                             .getValue(String.class));
+                                    put("score", calculateScore(snapshot));
                                 }};
                                 adapter.users.add(friendMap);
-                                adapter.notifyItemInserted(adapter.users.size() - 1);
                                 gotResult[0] = true;
+                                inserted[0]++;
+                                if (inserted[0] == numFriends) {
+                                    sortUsersPoints(adapter.users);
+                                    adapter.notifyItemInserted(adapter.users.size() - 1);
+                                }
                             }
 
                             @Override
@@ -152,7 +163,7 @@ public class FriendsFragment extends Fragment {
         pbFriends.setVisibility(View.VISIBLE);
         DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("Users");
         String currentUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        userReference.child(currentUid).child("Following").addListenerForSingleValueEvent(getFriendsFromNetwork);
+        userReference.child(currentUid).addListenerForSingleValueEvent(getFriendsFromNetwork);
         Timer timer = new Timer();
         TimerTask timerTask = new TimerTask() {
             @Override
@@ -184,10 +195,37 @@ public class FriendsFragment extends Fragment {
                             Log.e(TAG, e.toString());
                         }
                     }});
+                    sortUsersAlphabetically(adapter.users);
                     adapter.notifyItemInserted(adapter.users.size() - 1);
                     pbFriends.setVisibility(View.GONE);
                 }
             });
         }
+    }
+
+    private void sortUsersAlphabetically(List<Map<String, Object>> list) {
+        Collections.sort(list, new Comparator<Map<String, Object>>() {
+            @Override
+            public int compare(Map<String, Object> o1, Map<String, Object> o2) {
+                Log.i(TAG, "comparison: " + ((String) o1.get("username")).compareToIgnoreCase((String) o2.get("username")));
+                return ((String) o1.get("username")).compareToIgnoreCase((String) o2.get("username"));
+            }
+        });
+    }
+
+    private void sortUsersPoints(List<Map<String, Object>> list) {
+        Collections.sort(list, new Comparator<Map<String, Object>>() {
+            @Override
+            public int compare(Map<String, Object> o1, Map<String, Object> o2) {
+                return ((Integer) o2.get("score")) - ((Integer) o1.get("score"));
+            }
+        });
+    }
+
+    private int calculateScore(DataSnapshot friendSnapshot) {
+        int lastOnline = 1;
+        int totalRecipes = (int) friendSnapshot.child("Recipes").getChildrenCount();
+        int relevantRecipes = 0;
+        return LAST_ONLINE_WEIGHT * lastOnline + TOTAL_RECIPES_WEIGHT * totalRecipes + RELEVANT_RECIPES_WEIGHT * relevantRecipes;
     }
 }
