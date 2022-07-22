@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -32,6 +31,8 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -184,10 +185,20 @@ public class FriendsFragment extends Fragment {
                             Log.e(TAG, e.toString());
                         }
                     }});
+                    sortUsersAlphabetically(adapter.users);
                     adapter.notifyItemInserted(adapter.users.size() - 1);
                     pbFriends.setVisibility(View.GONE);
                 }
             });
         }
+    }
+
+    private void sortUsersAlphabetically(List<Map<String, Object>> list) {
+        Collections.sort(list, new Comparator<Map<String, Object>>() {
+            @Override
+            public int compare(Map<String, Object> o1, Map<String, Object> o2) {
+                return ((String) o1.get("username")).compareToIgnoreCase((String) o2.get("username"));
+            }
+        });
     }
 }
