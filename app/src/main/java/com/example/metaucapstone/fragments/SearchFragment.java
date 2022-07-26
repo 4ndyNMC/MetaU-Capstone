@@ -35,6 +35,8 @@ public class SearchFragment extends Fragment {
     private InputMethodManager imm;
     private ConstraintLayout clSearch;
     private EditText etSearch;
+    private EditText etMinCarbs;
+    private EditText etMaxCarbs;
     private Spinner spnCuisine;
     private Spinner spnDiet;
     private Spinner spnIntolerance;
@@ -64,6 +66,8 @@ public class SearchFragment extends Fragment {
         imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         clSearch = view.findViewById(R.id.clSearch);
         etSearch = view.findViewById(R.id.etSearch);
+        etMinCarbs = view.findViewById(R.id.etMinCarbs);
+        etMaxCarbs = view.findViewById(R.id.etMaxCarbs);
         fabSearch = view.findViewById(R.id.fabSearch);
         spnCuisine = view.findViewById(R.id.spnCuisine);
         spnDiet = view.findViewById(R.id.spnDiet);
@@ -122,6 +126,12 @@ public class SearchFragment extends Fragment {
         }
         if (!spnIntolerance.getSelectedItem().toString().equals("")) {
             args.put("intolerances", spnIntolerance.getSelectedItem().toString());
+        }
+        if (!etMinCarbs.getText().toString().equals("")) {
+            args.put("minCarbs", etMinCarbs.getText().toString());
+        }
+        if (!etMaxCarbs.getText().toString().equals("")) {
+            args.put("maxCarbs", etMaxCarbs.getText().toString());
         }
     }
 }

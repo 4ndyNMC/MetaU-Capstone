@@ -95,6 +95,33 @@
             app:layout_constraintTop_toTopOf="@id/tvIntolerance"
             app:layout_constraintStart_toEndOf="@id/tvIntolerance" />
 
+        <TextView
+            android:id="@+id/tvMinCarbs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/carbs"
+            android:textSize="20sp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintTop_toBottomOf="@id/spnIntolerance"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <EditText
+            android:id="@+id/etMinCarbs"
+            android:layout_width="43dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            app:layout_constraintEnd_toStartOf="@id/tvMinCarbs"
+            app:layout_constraintTop_toBottomOf="@id/spnIntolerance" />
+
+        <EditText
+            android:id="@+id/etMaxCarbs"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            app:layout_constraintStart_toEndOf="@id/tvMinCarbs"
+            app:layout_constraintTop_toBottomOf="@id/spnIntolerance" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
