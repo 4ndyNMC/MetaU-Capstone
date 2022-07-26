@@ -43,6 +43,8 @@ public class SearchFragment extends Fragment {
     private EditText etMaxFat;
     private EditText etMinSugar;
     private EditText etMaxSugar;
+    private EditText etMinFiber;
+    private EditText etMaxFiber;
     private Spinner spnCuisine;
     private Spinner spnDiet;
     private Spinner spnIntolerance;
@@ -81,6 +83,8 @@ public class SearchFragment extends Fragment {
         etMaxFat = view.findViewById(R.id.etMaxFat);
         etMinSugar = view.findViewById(R.id.etMinSugar);
         etMaxSugar = view.findViewById(R.id.etMaxSugar);
+        etMinFiber = view.findViewById(R.id.etMinFiber);
+        etMaxFiber = view.findViewById(R.id.etMaxFiber);
         fabSearch = view.findViewById(R.id.fabSearch);
         spnCuisine = view.findViewById(R.id.spnCuisine);
         spnDiet = view.findViewById(R.id.spnDiet);
@@ -164,10 +168,16 @@ public class SearchFragment extends Fragment {
             args.put("maxFat", etMaxFat.getText().toString());
         }
         if (!etMinSugar.getText().toString().equals("")) {
-            args.put("minFat", etMinSugar.getText().toString());
+            args.put("minSugar", etMinSugar.getText().toString());
         }
         if (!etMaxSugar.getText().toString().equals("")) {
-            args.put("maxFat", etMaxSugar.getText().toString());
+            args.put("maxSugar", etMaxSugar.getText().toString());
+        }
+        if (!etMinFiber.getText().toString().equals("")) {
+            args.put("minFiber", etMinFiber.getText().toString());
+        }
+        if (!etMaxFiber.getText().toString().equals("")) {
+            args.put("maxFiber", etMaxFiber.getText().toString());
         }
     }
 }
