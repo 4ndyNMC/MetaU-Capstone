@@ -14,6 +14,7 @@
     <string name="cuisine">Cuisine:</string>
     <string name="diet">Diet:</string>
     <string name="intolerance">Intolerance:</string>
+    <string name="meal_type">Meal Type</string>
     <string name="carbs">&lt; Carbohydrates (g) &lt;</string>
     <string name="protein">&lt; Protein (g) &lt;</string>
     <string name="fat">&lt; Fat (g) &lt;</string>

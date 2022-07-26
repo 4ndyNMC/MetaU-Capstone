@@ -108,6 +108,23 @@ public class Recipe implements Serializable {
         put("Wheat", Intolerance.WHEAT);
     }};
 
+    public static final HashMap<String, MealType> TYPE_MAP = new HashMap<String, MealType>() {{
+        put("Main_Course", MealType.MAIN_COURSE);
+        put("Side_Dish", MealType.SIDE_DISH);
+        put("Dessert", MealType.DESSERT);
+        put("Appetizer", MealType.APPETIZER);
+        put("Salad", MealType.SALAD);
+        put("Bread", MealType.BREAD);
+        put("Breakfast", MealType.BREAKFAST);
+        put("Soup", MealType.SOUP);
+        put("Beverage", MealType.BEVERAGE);
+        put("Sauce", MealType.SAUCE);
+        put("Marinade", MealType.MARINADE);
+        put("Finger_Food", MealType.FINGERFOOD);
+        put("Snack", MealType.SNACK);
+        put("Drink", MealType.DRINK);
+    }};
+
     private String name;
     private String id;
     private String imageUrl;

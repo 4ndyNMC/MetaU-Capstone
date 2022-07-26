@@ -46,6 +46,7 @@ public class SearchFragment extends Fragment {
     private Spinner spnCuisine;
     private Spinner spnDiet;
     private Spinner spnIntolerance;
+    private Spinner spnMealType;
     private FloatingActionButton fabSearch;
 
     public SearchFragment() { }
@@ -84,10 +85,12 @@ public class SearchFragment extends Fragment {
         spnCuisine = view.findViewById(R.id.spnCuisine);
         spnDiet = view.findViewById(R.id.spnDiet);
         spnIntolerance = view.findViewById(R.id.spnIntolerance);
+        spnMealType = view.findViewById(R.id.spnMealType);
 
         populateSpinner(spnCuisine, Recipe.CuisinesMap.keySet());
         populateSpinner(spnDiet, Recipe.DietMap.keySet());
         populateSpinner(spnIntolerance, Recipe.INTOLERANCE_MAP.keySet());
+        populateSpinner(spnMealType, Recipe.TYPE_MAP.keySet());
 
         clSearch.setOnClickListener(clSearchClicked);
         fabSearch.setOnClickListener(fabSearchClicked);
@@ -138,6 +141,9 @@ public class SearchFragment extends Fragment {
         }
         if (!spnIntolerance.getSelectedItem().toString().equals("")) {
             args.put("intolerances", spnIntolerance.getSelectedItem().toString());
+        }
+        if (!spnMealType.getSelectedItem().toString().equals("")) {
+            args.put("type", spnMealType.getSelectedItem().toString());
         }
         if (!etMinCarbs.getText().toString().equals("")) {
             args.put("minCarbs", etMinCarbs.getText().toString());

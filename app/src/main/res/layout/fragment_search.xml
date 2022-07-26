@@ -96,13 +96,32 @@
             app:layout_constraintStart_toEndOf="@id/tvIntolerance" />
 
         <TextView
+            android:id="@+id/tvMealType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/meal_type"
+            android:textSize="20sp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintTop_toBottomOf="@id/tvIntolerance"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Spinner
+            android:id="@+id/spnMealType"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown"
+            android:layout_marginStart="8dp"
+            app:layout_constraintTop_toTopOf="@id/tvMealType"
+            app:layout_constraintStart_toEndOf="@id/tvIntolerance" />
+
+        <TextView
             android:id="@+id/tvCarbs"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/carbs"
             android:textSize="20sp"
             android:layout_marginTop="12dp"
-            app:layout_constraintTop_toBottomOf="@id/spnIntolerance"
+            app:layout_constraintTop_toBottomOf="@id/spnMealType"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -112,7 +131,7 @@
             android:layout_height="wrap_content"
             android:inputType="number"
             app:layout_constraintEnd_toStartOf="@id/tvCarbs"
-            app:layout_constraintTop_toBottomOf="@id/spnIntolerance" />
+            app:layout_constraintTop_toBottomOf="@id/spnMealType" />
 
         <EditText
             android:id="@+id/etMaxCarbs"
@@ -120,7 +139,7 @@
             android:layout_height="wrap_content"
             android:inputType="number"
             app:layout_constraintStart_toEndOf="@id/tvCarbs"
-            app:layout_constraintTop_toBottomOf="@id/spnIntolerance" />
+            app:layout_constraintTop_toBottomOf="@id/spnMealType" />
 
         <TextView
             android:id="@+id/tvProtein"
