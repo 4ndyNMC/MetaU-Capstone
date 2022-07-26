@@ -16,6 +16,7 @@
     <string name="intolerance">Intolerance:</string>
     <string name="carbs">&lt; Carbohydrates (g) &lt;</string>
     <string name="protein">&lt; Protein (g) &lt;</string>
+    <string name="fat">&lt; Fat (g) &lt;</string>
     <string name="results">Results</string>
     <string name="no_results">Sorry, there were no search results ):</string>
     <string name="no_saved">No recipes saved yet!</string>

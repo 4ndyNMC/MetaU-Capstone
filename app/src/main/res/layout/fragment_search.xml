@@ -149,6 +149,33 @@
             app:layout_constraintTop_toBottomOf="@id/tvCarbs"
             app:layout_constraintStart_toEndOf="@id/tvProtein" />
 
+        <TextView
+            android:id="@+id/tvFat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fat"
+            android:textSize="20sp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintTop_toBottomOf="@id/tvProtein"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <EditText
+            android:id="@+id/etMinFat"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            app:layout_constraintTop_toBottomOf="@id/tvProtein"
+            app:layout_constraintEnd_toStartOf="@id/tvFat" />
+
+        <EditText
+            android:id="@+id/etMaxFat"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            app:layout_constraintTop_toBottomOf="@id/tvProtein"
+            app:layout_constraintStart_toEndOf="@id/tvFat" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
