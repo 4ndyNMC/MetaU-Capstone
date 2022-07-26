@@ -37,6 +37,8 @@ public class SearchFragment extends Fragment {
     private EditText etSearch;
     private EditText etMinCarbs;
     private EditText etMaxCarbs;
+    private EditText etMinProtein;
+    private EditText etMaxProtein;
     private Spinner spnCuisine;
     private Spinner spnDiet;
     private Spinner spnIntolerance;
@@ -68,6 +70,8 @@ public class SearchFragment extends Fragment {
         etSearch = view.findViewById(R.id.etSearch);
         etMinCarbs = view.findViewById(R.id.etMinCarbs);
         etMaxCarbs = view.findViewById(R.id.etMaxCarbs);
+        etMinProtein = view.findViewById(R.id.etMinProtein);
+        etMaxProtein = view.findViewById(R.id.etMaxProtein);
         fabSearch = view.findViewById(R.id.fabSearch);
         spnCuisine = view.findViewById(R.id.spnCuisine);
         spnDiet = view.findViewById(R.id.spnDiet);
@@ -132,6 +136,12 @@ public class SearchFragment extends Fragment {
         }
         if (!etMaxCarbs.getText().toString().equals("")) {
             args.put("maxCarbs", etMaxCarbs.getText().toString());
+        }
+        if (!etMinProtein.getText().toString().equals("")) {
+            args.put("minProtein", etMinProtein.getText().toString());
+        }
+        if (!etMaxProtein.getText().toString().equals("")) {
+            args.put("maxProtein", etMaxProtein.getText().toString());
         }
     }
 }
