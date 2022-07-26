@@ -37,6 +37,7 @@ public class SearchFragment extends Fragment {
     private EditText etSearch;
     private Spinner spnCuisine;
     private Spinner spnDiet;
+    private Spinner spnIntolerance;
     private FloatingActionButton fabSearch;
 
     public SearchFragment() { }
@@ -66,9 +67,11 @@ public class SearchFragment extends Fragment {
         fabSearch = view.findViewById(R.id.fabSearch);
         spnCuisine = view.findViewById(R.id.spnCuisine);
         spnDiet = view.findViewById(R.id.spnDiet);
+        spnIntolerance = view.findViewById(R.id.spnIntolerance);
 
         populateSpinner(spnCuisine, Recipe.CuisinesMap.keySet());
         populateSpinner(spnDiet, Recipe.DietMap.keySet());
+        populateSpinner(spnIntolerance, Recipe.INTOLERANCE_MAP.keySet());
 
         clSearch.setOnClickListener(clSearchClicked);
         fabSearch.setOnClickListener(fabSearchClicked);
@@ -109,16 +112,16 @@ public class SearchFragment extends Fragment {
 
     private void populateArgs(HashMap<String, String> args) {
         if (!etSearch.getText().toString().isEmpty()) {
-            Log.i(TAG, "query: " + etSearch.getText().toString());
             args.put("query", "\"" + etSearch.getText().toString() + "\"");
         }
         if (!spnCuisine.getSelectedItem().toString().equals("")) {
-            Log.i(TAG, "cuisine: " + spnCuisine.getSelectedItem().toString());
             args.put("cuisine", spnCuisine.getSelectedItem().toString());
         }
         if (!spnDiet.getSelectedItem().toString().equals("")) {
-            Log.i(TAG, "diet: " + spnDiet.getSelectedItem().toString());
             args.put("diet", spnDiet.getSelectedItem().toString());
+        }
+        if (!spnIntolerance.getSelectedItem().toString().equals("")) {
+            args.put("intolerances", spnIntolerance.getSelectedItem().toString());
         }
     }
 }

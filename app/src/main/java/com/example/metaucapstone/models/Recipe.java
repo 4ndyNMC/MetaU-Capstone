@@ -93,6 +93,21 @@ public class Recipe implements Serializable {
         put("Whole 30", Diet.WHOLE30);
     }};
 
+    public static final HashMap<String, Intolerance> INTOLERANCE_MAP = new HashMap<String, Intolerance>() {{
+        put("Dairy", Intolerance.DAIRY);
+        put("Egg", Intolerance.EGG);
+        put("Gluten", Intolerance.GLUTEN);
+        put("Grain", Intolerance.GRAIN);
+        put("Peanut", Intolerance.PEANUT);
+        put("Seafood", Intolerance.SEAFOOD);
+        put("Sesame", Intolerance.SESAME);
+        put("Shellfish", Intolerance.SHELLFISH);
+        put("Soy", Intolerance.SOY);
+        put("Sulfite", Intolerance.SULFITE);
+        put("Tree_Nut", Intolerance.TREE_NUT);
+        put("Wheat", Intolerance.WHEAT);
+    }};
+
     private String name;
     private String id;
     private String imageUrl;
