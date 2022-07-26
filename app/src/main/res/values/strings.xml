@@ -12,6 +12,7 @@
     <string name="settings">Settings</string>
     <string name="search">Search:</string>
     <string name="cuisine">Cuisine:</string>
+    <string name="diet">Diet:</string>
     <string name="results">Results</string>
     <string name="no_results">Sorry, there were no search results ):</string>
     <string name="no_saved">No recipes saved yet!</string>

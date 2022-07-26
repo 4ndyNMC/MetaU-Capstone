@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public class SearchFragment extends Fragment {
 
@@ -35,6 +36,7 @@ public class SearchFragment extends Fragment {
     private ConstraintLayout clSearch;
     private EditText etSearch;
     private Spinner spnCuisine;
+    private Spinner spnDiet;
     private FloatingActionButton fabSearch;
 
     public SearchFragment() { }
@@ -63,8 +65,10 @@ public class SearchFragment extends Fragment {
         etSearch = view.findViewById(R.id.etSearch);
         fabSearch = view.findViewById(R.id.fabSearch);
         spnCuisine = view.findViewById(R.id.spnCuisine);
+        spnDiet = view.findViewById(R.id.spnDiet);
 
-        populateSpinner();
+        populateSpinner(spnCuisine, Recipe.CuisinesMap.keySet());
+        populateSpinner(spnDiet, Recipe.DietMap.keySet());
 
         clSearch.setOnClickListener(clSearchClicked);
         fabSearch.setOnClickListener(fabSearchClicked);
@@ -94,6 +98,15 @@ public class SearchFragment extends Fragment {
         }
     };
 
+    private void populateSpinner(Spinner spinner, Set<String> set) {
+        List<String> args = new ArrayList<>(set);
+        args.sort(String::compareToIgnoreCase);
+        args.add(0, "");
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(),
+                R.layout.basic_dropdown_item, args);
+        spinner.setAdapter(spinnerAdapter);
+    }
+
     private void populateArgs(HashMap<String, String> args) {
         if (!etSearch.getText().toString().isEmpty()) {
             Log.i(TAG, "query: " + etSearch.getText().toString());
@@ -103,14 +116,9 @@ public class SearchFragment extends Fragment {
             Log.i(TAG, "cuisine: " + spnCuisine.getSelectedItem().toString());
             args.put("cuisine", spnCuisine.getSelectedItem().toString());
         }
-    }
-
-    private void populateSpinner() {
-        List<String> cuisines = new ArrayList<>(Recipe.CuisinesMap.keySet());
-        cuisines.sort(String::compareToIgnoreCase);
-        cuisines.add(0, "");
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(),
-                R.layout.basic_dropdown_item, cuisines);
-        spnCuisine.setAdapter(spinnerAdapter);
+        if (!spnDiet.getSelectedItem().toString().equals("")) {
+            Log.i(TAG, "diet: " + spnDiet.getSelectedItem().toString());
+            args.put("diet", spnDiet.getSelectedItem().toString());
+        }
     }
 }
