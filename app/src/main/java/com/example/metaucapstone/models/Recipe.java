@@ -213,6 +213,10 @@ public class Recipe implements Serializable {
         return steps;
     }
 
+    public void setSteps(List<String> steps) {
+        this.steps = steps;
+    }
+
     public List<String> getUsers() {
         if (users == null) {
             users = new ArrayList<>();

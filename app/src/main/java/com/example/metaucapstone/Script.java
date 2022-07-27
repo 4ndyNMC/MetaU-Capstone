@@ -30,10 +30,10 @@ public class Script {
 
     public static void populate() {
         DatabaseReference recipeReference = FirebaseDatabase.getInstance().getReference().child("Recipes");
-        recipeReference.addListenerForSingleValueEvent(dbAction);
+        recipeReference.addListenerForSingleValueEvent(updateRecipesWithSteps);
     }
 
-    private static ValueEventListener dbAction = new ValueEventListener() {
+    private static ValueEventListener updateRecipesWithCuisines = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot snapshot) {
             for (DataSnapshot recipeChild : snapshot.getChildren()) {
@@ -66,6 +66,47 @@ public class Script {
                         } catch (JSONException e) { }
                     }
                 });
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) { }
+    };
+
+    private static ValueEventListener updateRecipesWithSteps = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot snapshot) {
+            for (DataSnapshot recipeChild : snapshot.getChildren()) {
+                String requestUrl = RECIPE_INFO_URL + recipeChild.getKey() + "/information?includeNutrition=true&apiKey=" + API_KEY;
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder()
+                        .url(requestUrl)
+                        .build();
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Request request, IOException e) { }
+
+                    @Override
+                    public void onResponse(Response response) throws IOException {
+                        String responseData = response.body().string();
+                        try {
+                            Recipe recipeFromFirebase = recipeChild.child("Object").getValue(Recipe.class);
+                            JSONObject json = new JSONObject(responseData);
+                            Recipe recipeFromSpoonacular = new Recipe(json);
+                            recipeFromSpoonacular.loadData(new JSONObject(responseData));
+                            recipeFromFirebase.setSteps(new ArrayList<>());
+                            recipeFromFirebase.getSteps().addAll(recipeFromSpoonacular.getSteps());
+                            Log.i(TAG, recipeFromFirebase.getName() + " has:");
+                            for (String step : recipeFromFirebase.getSteps()) {
+                                Log.i(TAG, "              " + step);
+                            }
+                            FirebaseDatabase.getInstance().getReference().child("Recipes")
+                                    .child(recipeFromFirebase.getId()).child("Object")
+                                    .setValue(recipeFromFirebase);
+                        } catch (JSONException e) { }
+                    }
+                });
+//                break;
             }
         }
 

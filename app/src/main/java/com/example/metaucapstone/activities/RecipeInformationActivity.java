@@ -80,7 +80,7 @@ public class RecipeInformationActivity extends AppCompatActivity {
 
         if (db.hasRecipe(recipe.getId())) {
             ivRecipeInfo.setVisibility(View.GONE);
-            setViews(recipe.getName(), recipe.getSummary(), null, new ArrayList<String>());
+            setViews(recipe.getName(), recipe.getSummary(), null, recipe.getSteps());
         }
 
         FirebaseDatabase.getInstance().getReference()
