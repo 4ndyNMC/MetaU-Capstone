@@ -27,6 +27,8 @@ import java.net.URL;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
+    private static final int SPLASH_SCREEN_LENGTH = 750;
+
     DatabaseHelper db;
     DatabaseReference parent;
 
@@ -38,6 +40,11 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         Cache cache = new Cache(this);
         cache.initCache();
-        finish();
+        try {
+            Thread.sleep(SPLASH_SCREEN_LENGTH);
+            finish();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
