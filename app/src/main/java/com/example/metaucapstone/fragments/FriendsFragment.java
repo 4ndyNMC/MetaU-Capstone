@@ -45,7 +45,7 @@ public class FriendsFragment extends Fragment {
     public static final String TAG = "FriendsFragment";
     public static final long TIMEOUT_LENGTH = 3000L;
     private static final long TOTAL_RECIPES_WEIGHT = 50000000L;
-    private static final long RELEVANT_RECIPES_WEIGHT = 10000000L;
+    private static final long RELEVANT_RECIPES_WEIGHT = 100000000L;
     private static final long LAST_ONLINE_WEIGHT = -100L;
 
     FragmentManager fragmentManager;
