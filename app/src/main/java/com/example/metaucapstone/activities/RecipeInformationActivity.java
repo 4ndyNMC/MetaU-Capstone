@@ -10,6 +10,7 @@ import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -19,6 +20,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.example.metaucapstone.MainActivity;
 import com.example.metaucapstone.models.Recipe;
 import com.example.metaucapstone.models.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -52,6 +54,7 @@ public class RecipeInformationActivity extends AppCompatActivity {
 
     String currentUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
     boolean saved;
+    float x1, x2, y1, y2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +123,22 @@ public class RecipeInformationActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent touchEvent){
+        switch(touchEvent.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                x1 = touchEvent.getX();
+                y1 = touchEvent.getY();
+                break;
+            case MotionEvent.ACTION_UP:
+                x2 = touchEvent.getX();
+                y2 = touchEvent.getY();
+                if (x1 < x2) finish();
+                break;
+        }
+        return false;
     }
 
     private View.OnClickListener fabSaveClicked = new View.OnClickListener() {
