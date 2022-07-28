@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public class SearchFragment extends Fragment {
 
@@ -34,7 +35,20 @@ public class SearchFragment extends Fragment {
     private InputMethodManager imm;
     private ConstraintLayout clSearch;
     private EditText etSearch;
+    private EditText etMinCarbs;
+    private EditText etMaxCarbs;
+    private EditText etMinProtein;
+    private EditText etMaxProtein;
+    private EditText etMinFat;
+    private EditText etMaxFat;
+    private EditText etMinSugar;
+    private EditText etMaxSugar;
+    private EditText etMinFiber;
+    private EditText etMaxFiber;
     private Spinner spnCuisine;
+    private Spinner spnDiet;
+    private Spinner spnIntolerance;
+    private Spinner spnMealType;
     private FloatingActionButton fabSearch;
 
     public SearchFragment() { }
@@ -61,10 +75,26 @@ public class SearchFragment extends Fragment {
         imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         clSearch = view.findViewById(R.id.clSearch);
         etSearch = view.findViewById(R.id.etSearch);
+        etMinCarbs = view.findViewById(R.id.etMinCarbs);
+        etMaxCarbs = view.findViewById(R.id.etMaxCarbs);
+        etMinProtein = view.findViewById(R.id.etMinProtein);
+        etMaxProtein = view.findViewById(R.id.etMaxProtein);
+        etMinFat = view.findViewById(R.id.etMinFat);
+        etMaxFat = view.findViewById(R.id.etMaxFat);
+        etMinSugar = view.findViewById(R.id.etMinSugar);
+        etMaxSugar = view.findViewById(R.id.etMaxSugar);
+        etMinFiber = view.findViewById(R.id.etMinFiber);
+        etMaxFiber = view.findViewById(R.id.etMaxFiber);
         fabSearch = view.findViewById(R.id.fabSearch);
         spnCuisine = view.findViewById(R.id.spnCuisine);
+        spnDiet = view.findViewById(R.id.spnDiet);
+        spnIntolerance = view.findViewById(R.id.spnIntolerance);
+        spnMealType = view.findViewById(R.id.spnMealType);
 
-        populateSpinner();
+        populateSpinner(spnCuisine, Recipe.CuisinesMap.keySet());
+        populateSpinner(spnDiet, Recipe.DietMap.keySet());
+        populateSpinner(spnIntolerance, Recipe.INTOLERANCE_MAP.keySet());
+        populateSpinner(spnMealType, Recipe.TYPE_MAP.keySet());
 
         clSearch.setOnClickListener(clSearchClicked);
         fabSearch.setOnClickListener(fabSearchClicked);
@@ -94,23 +124,60 @@ public class SearchFragment extends Fragment {
         }
     };
 
+    private void populateSpinner(Spinner spinner, Set<String> set) {
+        List<String> args = new ArrayList<>(set);
+        args.sort(String::compareToIgnoreCase);
+        args.add(0, "");
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(),
+                R.layout.basic_dropdown_item, args);
+        spinner.setAdapter(spinnerAdapter);
+    }
+
     private void populateArgs(HashMap<String, String> args) {
         if (!etSearch.getText().toString().isEmpty()) {
-            Log.i(TAG, "query: " + etSearch.getText().toString());
             args.put("query", "\"" + etSearch.getText().toString() + "\"");
         }
         if (!spnCuisine.getSelectedItem().toString().equals("")) {
-            Log.i(TAG, "cuisine: " + spnCuisine.getSelectedItem().toString());
             args.put("cuisine", spnCuisine.getSelectedItem().toString());
         }
-    }
-
-    private void populateSpinner() {
-        List<String> cuisines = new ArrayList<>(Recipe.CuisinesMap.keySet());
-        cuisines.sort(String::compareToIgnoreCase);
-        cuisines.add(0, "");
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(),
-                R.layout.basic_dropdown_item, cuisines);
-        spnCuisine.setAdapter(spinnerAdapter);
+        if (!spnDiet.getSelectedItem().toString().equals("")) {
+            args.put("diet", spnDiet.getSelectedItem().toString());
+        }
+        if (!spnIntolerance.getSelectedItem().toString().equals("")) {
+            args.put("intolerances", spnIntolerance.getSelectedItem().toString());
+        }
+        if (!spnMealType.getSelectedItem().toString().equals("")) {
+            args.put("type", spnMealType.getSelectedItem().toString());
+        }
+        if (!etMinCarbs.getText().toString().equals("")) {
+            args.put("minCarbs", etMinCarbs.getText().toString());
+        }
+        if (!etMaxCarbs.getText().toString().equals("")) {
+            args.put("maxCarbs", etMaxCarbs.getText().toString());
+        }
+        if (!etMinProtein.getText().toString().equals("")) {
+            args.put("minProtein", etMinProtein.getText().toString());
+        }
+        if (!etMaxProtein.getText().toString().equals("")) {
+            args.put("maxProtein", etMaxProtein.getText().toString());
+        }
+        if (!etMinFat.getText().toString().equals("")) {
+            args.put("minFat", etMinFat.getText().toString());
+        }
+        if (!etMaxFat.getText().toString().equals("")) {
+            args.put("maxFat", etMaxFat.getText().toString());
+        }
+        if (!etMinSugar.getText().toString().equals("")) {
+            args.put("minSugar", etMinSugar.getText().toString());
+        }
+        if (!etMaxSugar.getText().toString().equals("")) {
+            args.put("maxSugar", etMaxSugar.getText().toString());
+        }
+        if (!etMinFiber.getText().toString().equals("")) {
+            args.put("minFiber", etMinFiber.getText().toString());
+        }
+        if (!etMaxFiber.getText().toString().equals("")) {
+            args.put("maxFiber", etMaxFiber.getText().toString());
+        }
     }
 }

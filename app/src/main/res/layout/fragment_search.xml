@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:text="@string/search"
             android:textSize="20sp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="12dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             tools:layout_editor_absoluteX="8dp"
@@ -43,19 +43,223 @@
             android:layout_height="wrap_content"
             android:text="@string/cuisine"
             android:textSize="20sp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="20dp"
             app:layout_constraintTop_toBottomOf="@id/tvSearch"
             app:layout_constraintStart_toStartOf="parent" />
 
         <Spinner
-            android:layout_width="150dp"
+            android:id="@+id/spnCuisine"
+            android:layout_width="160dp"
             android:layout_height="wrap_content"
             android:spinnerMode="dropdown"
-            android:id="@+id/spnCuisine"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="1dp"
+            android:layout_marginTop="14dp"
             app:layout_constraintTop_toBottomOf="@id/etSearch"
-            app:layout_constraintStart_toEndOf="@id/tvCuisine"/>
+            app:layout_constraintEnd_toEndOf="@id/spnIntolerance"/>
+
+        <TextView
+            android:id="@+id/tvDiet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/diet"
+            android:textSize="20sp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@id/tvCuisine"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <Spinner
+            android:id="@+id/spnDiet"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown"
+            android:layout_marginStart="8dp"
+            app:layout_constraintTop_toTopOf="@id/tvDiet"
+            app:layout_constraintEnd_toEndOf="@id/spnIntolerance" />
+
+        <TextView
+            android:id="@+id/tvIntolerance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/intolerance"
+            android:textSize="20sp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@id/tvDiet"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Spinner
+            android:id="@+id/spnIntolerance"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown"
+            android:layout_marginStart="8dp"
+            app:layout_constraintTop_toTopOf="@id/tvIntolerance"
+            app:layout_constraintStart_toEndOf="@id/tvIntolerance" />
+
+        <TextView
+            android:id="@+id/tvMealType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/meal_type"
+            android:textSize="20sp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@id/tvIntolerance"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Spinner
+            android:id="@+id/spnMealType"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown"
+            android:layout_marginStart="8dp"
+            app:layout_constraintTop_toTopOf="@id/tvMealType"
+            app:layout_constraintStart_toEndOf="@id/tvIntolerance" />
+
+        <TextView
+            android:id="@+id/tvCarbs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/carbs"
+            android:textSize="20sp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@id/spnMealType"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <EditText
+            android:id="@+id/etMinCarbs"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:layout_marginBottom="-10dp"
+            app:layout_constraintBottom_toBottomOf="@id/tvCarbs"
+            app:layout_constraintEnd_toStartOf="@id/tvCarbs" />
+
+        <EditText
+            android:id="@+id/etMaxCarbs"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:layout_marginBottom="-10dp"
+            app:layout_constraintBottom_toBottomOf="@id/tvCarbs"
+            app:layout_constraintStart_toEndOf="@id/tvCarbs" />
+
+        <TextView
+            android:id="@+id/tvProtein"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/protein"
+            android:textSize="20sp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@id/tvCarbs"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <EditText
+            android:id="@+id/etMinProtein"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:layout_marginBottom="-10dp"
+            app:layout_constraintBottom_toBottomOf="@id/tvProtein"
+            app:layout_constraintEnd_toStartOf="@id/tvProtein" />
+
+        <EditText
+            android:id="@+id/etMaxProtein"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:layout_marginBottom="-10dp"
+            app:layout_constraintBottom_toBottomOf="@id/tvProtein"
+            app:layout_constraintStart_toEndOf="@id/tvProtein" />
+
+        <TextView
+            android:id="@+id/tvFat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fat"
+            android:textSize="20sp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@id/tvProtein"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <EditText
+            android:id="@+id/etMinFat"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:layout_marginBottom="-10dp"
+            app:layout_constraintBottom_toBottomOf="@id/tvFat"
+            app:layout_constraintEnd_toStartOf="@id/tvFat" />
+
+        <EditText
+            android:id="@+id/etMaxFat"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:layout_marginBottom="-10dp"
+            app:layout_constraintBottom_toBottomOf="@id/tvFat"
+            app:layout_constraintStart_toEndOf="@id/tvFat" />
+
+        <TextView
+            android:id="@+id/tvSugar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sugar"
+            android:textSize="20sp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@id/tvFat"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <EditText
+            android:id="@+id/etMinSugar"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:layout_marginBottom="-10dp"
+            app:layout_constraintBottom_toBottomOf="@id/tvSugar"
+            app:layout_constraintEnd_toStartOf="@id/tvSugar" />
+
+        <EditText
+            android:id="@+id/etMaxSugar"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:layout_marginBottom="-10dp"
+            app:layout_constraintBottom_toBottomOf="@id/tvSugar"
+            app:layout_constraintStart_toEndOf="@id/tvSugar" />
+
+        <TextView
+            android:id="@+id/tvFiber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fiber"
+            android:textSize="20sp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@id/tvSugar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <EditText
+            android:id="@+id/etMinFiber"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:layout_marginBottom="-10dp"
+            app:layout_constraintBottom_toBottomOf="@id/tvFiber"
+            app:layout_constraintEnd_toStartOf="@id/tvFiber" />
+
+        <EditText
+            android:id="@+id/etMaxFiber"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:layout_marginBottom="-10dp"
+            app:layout_constraintBottom_toBottomOf="@id/tvFiber"
+            app:layout_constraintStart_toEndOf="@id/tvFiber" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

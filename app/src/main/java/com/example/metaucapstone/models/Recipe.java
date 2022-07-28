@@ -93,6 +93,38 @@ public class Recipe implements Serializable {
         put("Whole 30", Diet.WHOLE30);
     }};
 
+    public static final HashMap<String, Intolerance> INTOLERANCE_MAP = new HashMap<String, Intolerance>() {{
+        put("Dairy", Intolerance.DAIRY);
+        put("Egg", Intolerance.EGG);
+        put("Gluten", Intolerance.GLUTEN);
+        put("Grain", Intolerance.GRAIN);
+        put("Peanut", Intolerance.PEANUT);
+        put("Seafood", Intolerance.SEAFOOD);
+        put("Sesame", Intolerance.SESAME);
+        put("Shellfish", Intolerance.SHELLFISH);
+        put("Soy", Intolerance.SOY);
+        put("Sulfite", Intolerance.SULFITE);
+        put("Tree_Nut", Intolerance.TREE_NUT);
+        put("Wheat", Intolerance.WHEAT);
+    }};
+
+    public static final HashMap<String, MealType> TYPE_MAP = new HashMap<String, MealType>() {{
+        put("Main_Course", MealType.MAIN_COURSE);
+        put("Side_Dish", MealType.SIDE_DISH);
+        put("Dessert", MealType.DESSERT);
+        put("Appetizer", MealType.APPETIZER);
+        put("Salad", MealType.SALAD);
+        put("Bread", MealType.BREAD);
+        put("Breakfast", MealType.BREAKFAST);
+        put("Soup", MealType.SOUP);
+        put("Beverage", MealType.BEVERAGE);
+        put("Sauce", MealType.SAUCE);
+        put("Marinade", MealType.MARINADE);
+        put("Finger_Food", MealType.FINGERFOOD);
+        put("Snack", MealType.SNACK);
+        put("Drink", MealType.DRINK);
+    }};
+
     private String name;
     private String id;
     private String imageUrl;

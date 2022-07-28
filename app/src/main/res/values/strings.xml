@@ -12,6 +12,14 @@
     <string name="settings">Settings</string>
     <string name="search">Search:</string>
     <string name="cuisine">Cuisine:</string>
+    <string name="diet">Diet:</string>
+    <string name="intolerance">Intolerance:</string>
+    <string name="meal_type">Meal Type:</string>
+    <string name="carbs">&lt; Carbohydrates (g) &lt;</string>
+    <string name="protein">&lt; Protein (g) &lt;</string>
+    <string name="fat">&lt; Fat (g) &lt;</string>
+    <string name="sugar">&lt; Sugar (g) &lt;</string>
+    <string name="fiber">&lt; Fiber (g) &lt;</string>
     <string name="results">Results</string>
     <string name="no_results">Sorry, there were no search results ):</string>
     <string name="no_saved">No recipes saved yet!</string>
