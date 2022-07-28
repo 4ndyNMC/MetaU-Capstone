@@ -48,6 +48,8 @@ public class Recipe implements Serializable {
         VERY_HEALTHY, CHEAP, VERY_POPULAR, SUSTAINABLE
     }
 
+    public static final String TAG = "Recipe";
+
     public static final HashMap<String, Cuisine> CuisinesMap = new HashMap<String, Cuisine>() {{
         put("African", Cuisine.AFRICAN);
         put("American", Cuisine.AMERICAN);
@@ -135,6 +137,7 @@ public class Recipe implements Serializable {
     private List<Intolerance> intoleranceFree;
     private List<Tag> tags;
     private List<String> users;
+    private List<String> steps;
 
     public Recipe() { }
 
@@ -142,8 +145,12 @@ public class Recipe implements Serializable {
         diets = new ArrayList<>();
         intoleranceFree = new ArrayList<>();
         tags = new ArrayList<>();
-        users = new ArrayList<>();
         cuisines = new ArrayList<>();
+        diets = new ArrayList<>();
+        intoleranceFree = new ArrayList<>();
+        tags = new ArrayList<>();
+        users = new ArrayList<>();
+        steps = new ArrayList<>();
 
         name = jsonObject.getString("title");
         id = jsonObject.getString("id");
@@ -202,6 +209,14 @@ public class Recipe implements Serializable {
         users.add(user);
     }
 
+    public List<String> getSteps() {
+        return steps;
+    }
+
+    public void setSteps(List<String> steps) {
+        this.steps = steps;
+    }
+
     public List<String> getUsers() {
         if (users == null) {
             users = new ArrayList<>();
@@ -215,8 +230,9 @@ public class Recipe implements Serializable {
         if (jsonObject.getBoolean("glutenFree")) intoleranceFree.add(Intolerance.GLUTEN);
         if (jsonObject.getBoolean("dairyFree")) intoleranceFree.add(Intolerance.DAIRY);
         if (jsonObject.getBoolean("veryHealthy")) tags.add(Tag.VERY_HEALTHY);
-        JSONArray jsonCuisines = jsonObject.getJSONArray("cuisines");
         if (cuisines == null) cuisines = new ArrayList<>();
+        if (steps == null) steps = new ArrayList<>();
+        JSONArray jsonCuisines = jsonObject.getJSONArray("cuisines");
         if (jsonCuisines.length() == 0) cuisines.add(Cuisine.OTHER);
         else {
             for (int i = 0; i < jsonCuisines.length(); i++) {
@@ -224,7 +240,14 @@ public class Recipe implements Serializable {
                 if (CuisinesMap.containsKey(cuisineName)) cuisines.add(CuisinesMap.get(cuisineName));
             }
         }
-    if (cuisines.size() == 0) cuisines.add(Cuisine.OTHER);
+        JSONArray analyzedInstructions = jsonObject.getJSONArray("analyzedInstructions");
+        JSONObject stepsObject = analyzedInstructions.getJSONObject(0);
+        JSONArray stepsArray = stepsObject.getJSONArray("steps");
+        for (int i = 0; i < stepsArray.length(); i++) {
+            JSONObject stepObject = stepsArray.getJSONObject(i);
+            steps.add(stepObject.getString("step"));
+        }
+        if (cuisines.size() == 0) cuisines.add(Cuisine.OTHER);
         summary = jsonObject.getString("summary");
     }
 

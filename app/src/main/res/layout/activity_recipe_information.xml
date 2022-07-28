@@ -10,7 +10,6 @@
     android:id="@+id/clRecipeInfo"
     tools:context=".RecipeInformationActivity">
 
-
     <TextView
         android:id="@+id/tvRecipeInfoName"
         android:layout_width="wrap_content"
@@ -20,30 +19,64 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/lotRecipeInfo"
-        android:layout_width="360dp"
-        android:layout_height="160dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:translationZ="90dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvRecipeInfoName"
-        app:lottie_autoPlay="true"
-        app:lottie_loop="true"
-        app:lottie_rawRes="@raw/loading_food"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tvRecipeInfoName"
+        app:layout_constraintStart_toStartOf="parent">
 
-    <ImageView
-        android:id="@+id/ivRecipeInfo"
-        android:layout_width="360dp"
-        android:layout_height="160dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvRecipeInfoName"
-        tools:srcCompat="@tools:sample/backgrounds/scenic" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/lotRecipeInfo"
+                android:layout_width="360dp"
+                android:layout_height="160dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:translationZ="90dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvRecipeInfoName"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/loading_food"/>
+
+            <ImageView
+                android:id="@+id/ivRecipeInfo"
+                android:layout_width="360dp"
+                android:layout_height="160dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvRecipeInfoName"
+                tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+            <TextView
+                android:id="@+id/tvSummary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:autoLink="web"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ivRecipeInfo"
+                tools:layout_editor_absoluteY="267dp" />
+
+            <TextView
+                android:id="@+id/tvSteps"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvSummary" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 
     <ProgressBar
         android:id="@+id/pbRecipeInfo"
@@ -54,17 +87,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
-
-    <TextView
-        android:id="@+id/tvSummary"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:autoLink="web"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivRecipeInfo"
-        tools:layout_editor_absoluteY="267dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"

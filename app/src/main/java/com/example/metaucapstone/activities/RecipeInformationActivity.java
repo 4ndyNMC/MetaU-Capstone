@@ -33,6 +33,7 @@ import org.parceler.Parcels;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class RecipeInformationActivity extends AppCompatActivity {
 
@@ -41,6 +42,7 @@ public class RecipeInformationActivity extends AppCompatActivity {
     ConstraintLayout clRecipeInfo;
     TextView tvTitle;
     TextView tvSummary;
+    TextView tvSteps;
     ImageView ivRecipeInfo;
     ProgressBar pbRecipeInfo;
     FloatingActionButton fabSave;
@@ -64,6 +66,7 @@ public class RecipeInformationActivity extends AppCompatActivity {
         clRecipeInfo = findViewById(R.id.clRecipeInfo);
         tvTitle = findViewById(R.id.tvRecipeInfoName);
         tvSummary = findViewById(R.id.tvSummary);
+        tvSteps = findViewById(R.id.tvSteps);
         ivRecipeInfo = findViewById(R.id.ivRecipeInfo);
         fabSave = findViewById(R.id.fabSave);
         lotRecipeInfo = findViewById(R.id.lotRecipeInfo);
@@ -77,7 +80,7 @@ public class RecipeInformationActivity extends AppCompatActivity {
 
         if (db.hasRecipe(recipe.getId())) {
             ivRecipeInfo.setVisibility(View.GONE);
-            setViews(recipe.getName(), recipe.getSummary(), null);
+            setViews(recipe.getName(), recipe.getSummary(), null, recipe.getSteps());
         }
 
         FirebaseDatabase.getInstance().getReference()
@@ -232,11 +235,11 @@ public class RecipeInformationActivity extends AppCompatActivity {
     }
 
     public void loadDataIntoUI(Recipe recipe) {
-        setViews(recipe.getName(), recipe.getSummary(), recipe.getImageUrl());
+        setViews(recipe.getName(), recipe.getSummary(), recipe.getImageUrl(), recipe.getSteps());
         lotRecipeInfo.setVisibility(View.GONE);
     }
 
-    private void setViews(String title, String summary, Object img) {
+    private void setViews(String title, String summary, Object img, List<String> steps) {
         if (summary != null) tvSummary.setText(Html.fromHtml(summary, Html.FROM_HTML_MODE_COMPACT));
         tvTitle.setText(title);
         Glide.with(this)
@@ -244,6 +247,14 @@ public class RecipeInformationActivity extends AppCompatActivity {
                 .transform(new CenterCrop(), new RoundedCorners(25))
                 .override(360, 160)
                 .into(ivRecipeInfo);
+        StringBuilder stepList = new StringBuilder();
+        for (int i = 0; i < steps.size(); i++) {
+            stepList.append("\nStep " + (i + 1) + ": " + steps.get(i) + "\n");
+        }
+        for (int i = 0; i < steps.size(); i++) {
+            stepList.append("\n");
+        }
+        tvSteps.setText(stepList.toString());
         ivRecipeInfo.setVisibility(View.VISIBLE);
         pbRecipeInfo.setVisibility(ProgressBar.GONE);
         fabSave.setVisibility(View.VISIBLE);
