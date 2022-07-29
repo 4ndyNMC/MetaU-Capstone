@@ -29,7 +29,7 @@ import java.net.URL;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
-    private static final int SPLASH_SCREEN_LENGTH = 1000;
+    private static final int SPLASH_SCREEN_LENGTH = 750;
 
     DatabaseHelper db;
     DatabaseReference parent;
