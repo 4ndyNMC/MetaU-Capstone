@@ -2,6 +2,8 @@ package com.example.metaucapstone;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,8 @@ import java.util.List;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> {
 
+    public static final String TAG = "RecipeAdapter";
+
     Context context;
     List<Recipe> recipes;
 
@@ -30,6 +34,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View recipeView = LayoutInflater.from(context).inflate(R.layout.item_recipe, parent, false);
+        recipeView.setAlpha(0.0f);
+        recipeView.animate().alpha(1.0f);
         return new ViewHolder(recipeView);
     }
 
