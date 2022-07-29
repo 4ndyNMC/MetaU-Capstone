@@ -10,7 +10,9 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.example.metaucapstone.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -27,7 +29,7 @@ import java.net.URL;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
-    private static final int SPLASH_SCREEN_LENGTH = 750;
+    private static final int SPLASH_SCREEN_LENGTH = 1000;
 
     DatabaseHelper db;
     DatabaseReference parent;
